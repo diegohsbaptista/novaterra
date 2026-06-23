@@ -964,38 +964,42 @@ function escapeHTML(s){ return s.replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','
 function restart(){ state.consc={}; state.prat={}; state.asp={}; state.cocria={}; state.projeto=''; state.semente=''; buildSteps(); idx=-1; render(); }
 
 async function capturarWaitlist(){
-  const email = state.lead?.email || '';
-  const nome = state.lead?.first_name || 'Líder';
-  const phone = state.lead?.phone || '';
-  const instagram = state.lead?.instagram || '';
+  const lead = state.lead || {};
   
-  if(!email){ alert('❌ Email não foi capturado. Tente novamente.'); return; }
-  
-  // envia pro Make
-  try{
-    if(CAPTURE_ENDPOINT){
-      // A palavra "await" obriga a página a esperar o Make processar os dados
-      await fetch(CAPTURE_ENDPOINT, {
-        method: 'POST',
-        headers: {'Content-Type': 'application/json'},
-        body: JSON.stringify({
-          email: email,
-          first_name: nome,
-          phone: phone,
-          instagram: instagram,
-          tipo: 'mapa',
-          ts: new Date().toISOString()
-        })
-      });
-    }
-  }catch(e){
-    // Erro ignorado para não travar a tela
+  if(!lead.email){ 
+    alert('❌ Email não foi capturado. Tente novamente.'); 
+    return; 
   }
-  
-  // mostra mensagem
-  alert('✅ Perfeito, '+nome+'!\n\nSeu email foi registrado na lista de espera.\n\nVocê será um(a) dos(as) primeiros(as) a receber o convite quando a Jornada de Ativação for lançada.');
-}
 
+  // Calcula o resultado do arquétipo para enviar junto
+  let ps=0, pc=0; 
+  PRAT.forEach(function(q){ var o=state.prat[q.k]; if(o){ ps+=o.a; pc++; } });
+  var pa = bandOf(pc ? ps/pc : 2);
+  
+  // Payload estruturado para a planilha "Leads Lideranças Nova Terra"
+  const payload = {
+    email: lead.email,
+    first_name: lead.nome || 'Líder',
+    phone: '',
+    instagram: '',
+    tipo: 'mapa',
+    arquetipo: BANDS[pa].arq,
+    dimensao: BANDS[pa].code,
+    ts: new Date().toISOString()
+  };
+  
+  try {
+    await fetch("https://hook.us2.make.com/di8nys4yzx72wt7waoepja5ff34gesev", {
+      method: 'POST',
+      headers: {'Content-Type': 'application/json'},
+      body: JSON.stringify(payload)
+    });
+    alert('✅ Perfeito, ' + (lead.nome || 'Líder') + '! Seu Mapa foi registrado e os dados enviados para a nossa equipe.');
+  } catch(e) {
+    console.error("Erro ao enviar:", e);
+    alert('Ops, algo deu errado. Tente novamente em instantes.');
+  }
+}
 render();
 </script>
 </body>
