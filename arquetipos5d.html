@@ -1,0 +1,701 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Descubra seu Arquétipo · Etapa de Transição para a 5D</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,500;0,600;1,400;1,500&family=Spectral:ital,wght@0,300;0,400;0,500;0,600;1,400&family=Cinzel:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --ink:#070912; --ink-2:#0d1120;
+    --line:rgba(190,200,255,.10); --line-2:rgba(190,200,255,.20);
+    --text:#e7e9f5; --text-soft:#a9adc8; --text-dim:#6f7398;
+    --c3d:#c07a3e; --c4d:#cd9a45; --c5d:#3f9c9c; --c6d:#e08aa6; --c7d:#8f8de0;
+    --accent:#e08aa6;
+  }
+  *{box-sizing:border-box;margin:0;padding:0}
+  html{scroll-behavior:smooth}
+  body{background:
+      radial-gradient(120% 80% at 50% -10%, rgba(143,141,224,.12), transparent 55%),
+      radial-gradient(100% 60% at 85% 110%, rgba(224,138,166,.07), transparent 60%),
+      var(--ink);
+    color:var(--text);font-family:'Spectral',Georgia,serif;font-weight:300;line-height:1.6;
+    -webkit-font-smoothing:antialiased;min-height:100vh;overflow-x:hidden;}
+  body::before{content:"";position:fixed;inset:0;pointer-events:none;z-index:1;opacity:.05;
+    background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='140' height='140'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.9' numOctaves='3'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");}
+  .stage{position:relative;z-index:2;max-width:680px;margin:0 auto;padding:0 24px;min-height:100vh;display:flex;flex-direction:column;justify-content:center}
+  .screen{animation:fade .5s ease both}
+  @keyframes fade{from{opacity:0;transform:translateY(14px)}to{opacity:1;transform:none}}
+
+  .eyebrow{font-family:'Cinzel',serif;font-size:10.5px;letter-spacing:.38em;text-transform:uppercase;color:var(--text-dim);margin-bottom:22px}
+  h1{font-family:'Cormorant Garamond',serif;font-weight:500;font-size:clamp(2.3rem,6vw,3.5rem);line-height:1.05;letter-spacing:-.5px}
+  h1 em{font-style:italic;color:var(--accent)}
+  .lede{color:var(--text-soft);font-size:1.08rem;margin-top:22px;max-width:540px}
+  .note{margin-top:24px;padding:16px 20px;border:1px solid var(--line);border-radius:12px;font-size:.95rem;color:var(--text-soft)}
+  .note b{color:var(--text);font-weight:500}
+
+  .btn{display:inline-flex;align-items:center;gap:12px;font-family:'Cinzel',serif;font-size:12px;letter-spacing:.18em;text-transform:uppercase;
+    background:linear-gradient(100deg,var(--c5d),var(--accent));color:#0a0a14;font-weight:600;border:none;border-radius:999px;
+    padding:16px 30px;cursor:pointer;transition:transform .2s,box-shadow .2s,opacity .2s;box-shadow:0 8px 30px rgba(224,138,166,.18)}
+  .btn:hover{transform:translateY(-2px);box-shadow:0 12px 38px rgba(224,138,166,.28)}
+  .btn[disabled]{opacity:.35;pointer-events:none}
+  .btn.ghost{background:transparent;color:var(--text-soft);border:1px solid var(--line-2);box-shadow:none}
+  .start-row{margin-top:36px}
+
+  .topbar{position:fixed;top:0;left:0;right:0;z-index:5;padding:18px 24px;display:flex;align-items:center;gap:16px;background:linear-gradient(180deg,var(--ink),transparent)}
+  .prog{flex:1;height:2px;background:var(--line);border-radius:2px;overflow:hidden}
+  .prog i{display:block;height:100%;width:0;background:linear-gradient(90deg,var(--c5d),var(--accent));transition:width .4s}
+  .prog-label{font-family:'Cinzel',serif;font-size:10px;letter-spacing:.2em;color:var(--text-dim);white-space:nowrap}
+  .back{background:none;border:none;color:var(--text-dim);font-family:'Cinzel',serif;font-size:10px;letter-spacing:.2em;text-transform:uppercase;cursor:pointer;padding:4px}
+  .back:hover{color:var(--text-soft)} .back[disabled]{opacity:0;pointer-events:none}
+
+  .qmeta{font-family:'Cinzel',serif;font-size:10px;letter-spacing:.28em;text-transform:uppercase;color:var(--text-dim);margin-bottom:18px;display:flex;align-items:center;gap:12px}
+  .qmeta::before{content:"";width:22px;height:1px;background:var(--line-2)}
+  .qtext{font-family:'Cormorant Garamond',serif;font-weight:500;font-size:clamp(1.55rem,4vw,2.15rem);line-height:1.24}
+  .qtext .pf{font-style:italic;color:var(--accent)}
+
+  .choices{margin-top:26px;display:flex;flex-direction:column;gap:10px}
+  .choice{text-align:left;border:1px solid var(--line-2);background:rgba(255,255,255,.02);border-radius:12px;padding:16px 19px;cursor:pointer;transition:all .16s;color:var(--text-soft);font-size:1.02rem;line-height:1.4}
+  .choice:hover{border-color:var(--accent);transform:translateX(4px);color:var(--text)}
+  .choice.sel{border-color:var(--accent);background:linear-gradient(100deg,rgba(63,156,156,.12),rgba(224,138,166,.12));color:var(--text)}
+
+  /* captura */
+  .cap-intro{color:var(--text-soft);margin-top:16px;font-size:1.0rem}
+  .teaser{list-style:none;margin:18px 0 24px;display:flex;flex-direction:column;gap:10px}
+  .teaser li{position:relative;padding-left:24px;color:var(--text-soft);font-size:.98rem}
+  .teaser li::before{content:"✦";position:absolute;left:0;top:1px;color:var(--accent)}
+  .teaser li b{color:var(--text);font-weight:500}
+  .capform{display:flex;flex-direction:column;gap:11px;margin-top:4px}
+  .capform input{background:rgba(255,255,255,.03);border:1px solid var(--line-2);border-radius:11px;color:var(--text);font-family:'Spectral',serif;font-size:1.02rem;padding:15px 17px}
+  .capform input:focus{outline:none;border-color:var(--accent)} .capform input::placeholder{color:var(--text-dim)}
+  .cap-priv{margin-top:13px;font-size:.82rem;color:var(--text-dim)}
+  .open-row{margin-top:20px}
+
+  /* RESULTADO */
+  .result{animation:fade .7s ease both;padding:70px 0 60px}
+  .res-eyebrow{font-family:'Cinzel',serif;font-size:11px;letter-spacing:.32em;text-transform:uppercase;color:var(--text-dim);margin-bottom:14px}
+  .arq-card{border:1px solid var(--line-2);border-radius:18px;padding:34px 30px;
+    background:radial-gradient(130% 130% at 50% 0%,rgba(224,138,166,.13),transparent 60%),var(--ink-2);text-align:center}
+  .arq-card .sou{font-family:'Cinzel',serif;font-size:10.5px;letter-spacing:.3em;text-transform:uppercase;color:var(--text-dim);margin-bottom:10px}
+  .arq-card .arq-nome{font-family:'Cormorant Garamond',serif;font-weight:600;font-size:clamp(2.2rem,6vw,3rem);line-height:1.05;color:var(--text)}
+  .arq-card .arq-desc{font-family:'Cormorant Garamond',serif;font-style:italic;font-size:1.25rem;color:var(--accent);margin-top:8px}
+  .arq-card .arq-dom{color:var(--text-soft);font-size:1.04rem;margin-top:16px;max-width:440px;margin-left:auto;margin-right:auto}
+
+  .res-block{margin-top:30px;padding-top:26px;border-top:1px solid var(--line)}
+  .res-block .lbl{font-family:'Cinzel',serif;font-size:10.5px;letter-spacing:.26em;text-transform:uppercase;color:var(--text-dim);margin-bottom:14px}
+
+  /* validação */
+  .valid{margin-top:28px;border:1px solid var(--line-2);border-left:2px solid var(--accent);border-radius:14px;padding:26px 28px;background:linear-gradient(120deg,rgba(224,138,166,.06),transparent)}
+  .valid .vk{font-family:'Cinzel',serif;font-size:10px;letter-spacing:.28em;text-transform:uppercase;color:var(--accent);margin-bottom:14px}
+  .valid p{color:var(--text-soft);font-size:1.06rem;margin-top:12px}
+  .valid p:first-of-type{margin-top:0}
+  .valid .lead-line{font-family:'Cormorant Garamond',serif;font-style:italic;font-size:1.4rem;color:var(--text);line-height:1.3}
+  .valid b{color:var(--text);font-weight:500}
+
+  .mandala{display:flex;flex-wrap:wrap;gap:12px}
+  .gift{border:1px solid var(--line-2);border-radius:10px;padding:14px 16px;flex:1;min-width:220px}
+  .gift .gn{font-family:'Cormorant Garamond',serif;font-size:1.25rem;color:var(--text)}
+  .gift .gd{font-size:.86rem;color:var(--text-dim);margin-top:3px;line-height:1.34}
+
+  /* escada da etapa */
+  .etapa-wrap{display:grid;grid-template-columns:118px 1fr;gap:24px;align-items:center;margin-top:6px}
+  .ladder{position:relative;height:230px}
+  .rung{position:absolute;left:0;right:0;display:flex;align-items:center;transform:translateY(-50%)}
+  .rung .rl{width:120px;text-align:right;font-family:'Cinzel',serif;font-size:9px;letter-spacing:.1em;text-transform:uppercase;color:var(--text-dim);padding-right:14px;line-height:1.2}
+  .rung .rline{flex:1;height:1px;background:var(--line)}
+  .rung.is5d .rl{color:var(--c5d)} .rung.is5d .rline{background:linear-gradient(90deg,var(--c5d),transparent)}
+  .track{position:absolute;left:124px;top:0;bottom:0;width:2px;background:linear-gradient(180deg,var(--c7d),var(--c6d),var(--c5d),var(--c4d),var(--c3d));opacity:.32}
+  .you{position:absolute;left:124px;transform:translate(-50%,-50%);width:20px;height:20px;border-radius:50%;border:2px solid var(--ink);box-shadow:0 0 18px currentColor;z-index:2}
+  .youlbl{position:absolute;left:140px;transform:translateY(-50%);font-family:'Cinzel',serif;font-size:9px;letter-spacing:.14em;text-transform:uppercase;color:var(--text);white-space:nowrap}
+  .etapa-text{font-size:1.04rem;color:var(--text-soft)}
+  .etapa-text .et-band{font-family:'Cormorant Garamond',serif;font-style:italic;font-size:1.35rem;color:var(--text);display:block;margin-bottom:8px}
+  .etapa-5d{margin-top:14px;font-family:'Cormorant Garamond',serif;font-size:1.2rem;font-style:italic;color:var(--accent)}
+  .etapa-5d b{color:var(--accent);font-weight:500}
+
+  /* sombras */
+  .sombras{margin-top:26px;border:1px solid var(--line-2);border-radius:14px;padding:24px 26px;background:rgba(192,122,62,.04)}
+  .sombras .sk{font-family:'Cinzel',serif;font-size:10px;letter-spacing:.26em;text-transform:uppercase;color:var(--c4d);margin-bottom:8px}
+  .sombras .sintro{color:var(--text-soft);font-size:.98rem;margin-bottom:16px}
+  .sombras ul{list-style:none;display:flex;flex-direction:column;gap:11px}
+  .sombras li{position:relative;padding-left:26px;color:var(--text);font-family:'Cormorant Garamond',serif;font-size:1.22rem;font-style:italic;line-height:1.3}
+  .sombras li::before{content:"☾";position:absolute;left:0;top:2px;color:var(--c4d);font-style:normal;font-size:.95rem}
+  .sombras .strigger{margin-top:18px;color:var(--text-soft);font-size:1.0rem}
+  .sombras .strigger b{color:var(--text);font-weight:500}
+
+  .share-note{margin-top:24px;font-size:.92rem;color:var(--text-dim);text-align:center}
+  .share-note b{color:var(--text-soft)}
+
+  .cta{margin-top:42px;padding:38px 32px;border-radius:18px;border:1px solid var(--line-2);text-align:center;
+    background:radial-gradient(130% 130% at 50% 0%,rgba(224,138,166,.14),transparent 60%),var(--ink-2)}
+  .cta .k{font-family:'Cinzel',serif;font-size:10.5px;letter-spacing:.3em;text-transform:uppercase;color:var(--text-dim);margin-bottom:14px}
+  .cta h2{font-family:'Cormorant Garamond',serif;font-weight:500;font-size:clamp(1.7rem,4.5vw,2.4rem);line-height:1.1}
+  .cta h2 em{font-style:italic;color:var(--accent)}
+  .cta .sub{color:var(--text-soft);font-size:1.04rem;margin:14px auto 26px;max-width:500px}
+  .restart{margin-top:26px;text-align:center}
+
+  @media(max-width:560px){
+    .gift{min-width:100%}
+    .etapa-wrap{grid-template-columns:1fr;gap:18px}
+    .ladder{height:200px;margin-left:6px}
+  }
+  .pratica{margin-top:30px;border:1px solid var(--line-2);border-radius:16px;padding:28px;background:radial-gradient(130% 130% at 0% 0%,rgba(63,156,156,.12),transparent 55%),var(--ink-2)}
+  .pratica .pk{font-family:'Cinzel',serif;font-size:10px;letter-spacing:.26em;text-transform:uppercase;color:var(--c5d);margin-bottom:10px}
+  .pratica .pnome{font-family:'Cormorant Garamond',serif;font-style:italic;font-size:1.7rem;color:var(--text);line-height:1.12}
+  .pratica .pq{color:var(--text-soft);font-size:1rem;margin:8px 0 20px}
+  .pratica ol{list-style:none;counter-reset:p;display:flex;flex-direction:column;gap:13px}
+  .pratica li{position:relative;padding-left:40px;color:var(--text-soft);font-size:1.02rem;line-height:1.5;counter-increment:p}
+  .pratica li::before{content:counter(p);position:absolute;left:0;top:-1px;width:25px;height:25px;border-radius:50%;border:1px solid var(--c5d);color:var(--c5d);font-family:'Cinzel',serif;font-size:11px;display:flex;align-items:center;justify-content:center}
+  .pratica .pfoot{margin-top:20px;padding-top:17px;border-top:1px solid var(--line);color:var(--text-soft);font-size:1rem;line-height:1.55}
+  .pratica .pfoot b{color:var(--text);font-weight:500}
+
+  /* sub-linha das opções */
+  .choice .cmain{display:block;color:var(--text);font-size:1.02rem;line-height:1.38}
+  .choice .csub{display:block;margin-top:5px;font-size:.9rem;color:var(--text-dim);font-weight:300;line-height:1.4}
+  .choice:hover .csub,.choice.sel .csub{color:var(--text-soft)}
+
+  /* identidade rica no card do arquétipo */
+  .arq-id{margin-top:24px;padding-top:20px;border-top:1px solid var(--line);display:grid;gap:15px;text-align:left;max-width:520px;margin-left:auto;margin-right:auto}
+  .arq-id .aid span{display:block;font-family:'Cinzel',serif;font-size:9.5px;letter-spacing:.22em;text-transform:uppercase;color:var(--c4d);margin-bottom:5px}
+  .arq-id .aid p{margin:0;color:var(--text-soft);font-size:1.02rem;line-height:1.5}
+  .arq-id .aid:last-child p{font-family:'Cormorant Garamond',serif;font-style:italic;font-size:1.2rem;color:var(--text)}
+
+  /* arco 3D→7D do arquétipo */
+  .arc-intro{color:var(--text-soft);font-size:1.02rem;line-height:1.55;margin-bottom:18px}
+  .arc-intro b{color:var(--text);font-weight:500}
+  .arc7{display:flex;flex-direction:column;gap:9px}
+  .arc-row{display:flex;gap:16px;align-items:flex-start;border:1px solid var(--line);border-left:2px solid var(--line-2);border-radius:12px;padding:15px 18px;background:rgba(255,255,255,.015);transition:all .2s}
+  .arc-row.on{background:linear-gradient(100deg,rgba(63,156,156,.07),transparent);border-left-width:3px}
+  .arc-band{flex:0 0 64px;font-family:'Cinzel',serif;line-height:1.1;padding-top:2px}
+  .arc-band b{font-size:1.18rem;font-weight:600;display:block}
+  .arc-band small{display:block;font-size:9px;letter-spacing:.08em;text-transform:uppercase;color:var(--text-dim);margin-top:3px;font-weight:400}
+  .arc-txt{flex:1;color:var(--text-soft);font-size:1rem;line-height:1.5}
+  .arc-row.on .arc-txt{color:var(--text)}
+  .arc-here{display:inline-block;margin-top:8px;font-family:'Cinzel',serif;font-size:8.5px;letter-spacing:.2em;text-transform:uppercase;color:var(--c5d);border:1px solid var(--line-2);border-radius:999px;padding:3px 11px}
+  @media(max-width:520px){ .arc-row{flex-direction:column;gap:7px} .arc-band{flex-basis:auto;display:flex;align-items:baseline;gap:8px} .arc-band small{margin-top:0} }
+</style>
+</head>
+<body>
+
+<div class="topbar" id="topbar" style="display:none">
+  <button class="back" id="backBtn" onclick="goBack()">← Voltar</button>
+  <div class="prog"><i id="progFill"></i></div>
+  <div class="prog-label" id="progLabel"></div>
+</div>
+
+<div class="stage" id="stage"></div>
+
+<script>
+/* ============================================================
+   ► LINKS (preencha) ◄
+   MAPA_URL = página de vendas do Mapa de Evolução (low ticket)
+   CAPTURE_ENDPOINT = webhook da sua automação de email
+   ============================================================ */
+const MAPA_URL = "https://mapadeevolucao.lovable.app";
+const CAPTURE_ENDPOINT = "https://formspree.io/f/xlgyeqqk";
+
+/* ---------- 11 PERFIS ---------- */
+const P = {
+  buscador:{n:'Buscador(a)', d:'a alma que já sabe tudo e agora precisa apenas encarnar', dom:'Virar prova viva — autorizar o outro a parar de correr.', contrib:'a prova viva de que a travessia é possível'},
+  terapeuta:{n:'Terapeuta', d:'o cuidado que aprende a ser cuidado', dom:'Segurar o caos sem pânico — regular o campo de uma sala inteira.', contrib:'a saúde emocional e energética do organismo, pra que ninguém queime no caminho'},
+  facilitador:{n:'Facilitador(a)', d:'guiava círculos, agora é chamado a tecer redes', dom:'Criar campos onde outros líderes nascem.', contrib:'o campo onde outras lideranças nascem'},
+  empreendedor:{n:'Empreendedor(a) Consciente', d:'sustenta na matéria e agora prototipa o novo', dom:'Aterrar visão em estrutura — dar chão material aos sonhos.', contrib:'o aterramento — a frequência virando sistema viável'},
+  guardiaoterra:{n:'Guardião(ã) da Terra', d:'guardou o solo na espera e agora abre os portais', dom:'Memória viva e relação real — oferecer chão pronto.', contrib:'o corpo físico da Nova Terra, o chão onde a luz pousa'},
+  arquiteto:{n:'Arquiteto(a) Invisível', d:'o mago da tecnologia e do espírito que constrói nos bastidores', dom:'Sustentar todos os palcos sem precisar de nenhum.', contrib:'a estrutura invisível que sustenta todos os palcos'},
+  infiltrado:{n:'Infiltrado(a)', d:'entrou na matriz para abrir as portas por dentro', dom:'Traduzir os códigos do velho para o novo — abrir portas por dentro.', contrib:'a ponte que abre o velho sistema por dentro, sem ruptura violenta'},
+  artista:{n:'Artista Frequencial', d:'traduz luz em beleza e cura sem palavras', dom:'Abrir o que o discurso não alcança — curar sem nomear.', contrib:'a beleza que abre corações onde o discurso não entra'},
+  paemae:{n:'Pai e Mãe da Nova Geração', d:'gesta as crianças estelares no silêncio do lar', dom:'Construir o tecido humano onde todo o resto se apoia.', contrib:'a continuidade humana, o campo multiplicado célula a célula'},
+  tradutor:{n:'Tradutor(a)', d:'a ponte viva entre ciência e espírito', dom:'Tornar a Nova Terra compreensível sem diluir.', contrib:'a ponte viva entre mundos que não se falavam'},
+  nomade:{n:'Nômade Regenerativo(a)', d:'tece territórios e mantém a grade da Terra pulsando', dom:'Costurar o todo — manter a circulação entre os nós da rede.', contrib:'a circulação que mantém a grade da Terra pulsando'}
+};
+const PORDER = ['buscador','terapeuta','facilitador','empreendedor','guardiaoterra','arquiteto','infiltrado','artista','paemae','tradutor','nomade'];
+
+/* ---------- ARQUÉTIPO: IDENTIDADE RICA + ARCO 3D→7D ---------- */
+/* quemE / momento / pergunta = identidade. arc{1..5} = como o MESMO dom se expressa em cada frequência. */
+const ARQX = {
+  buscador:{
+    quemE:'Já fez terapia, retiros, medicinas, constelação, cursos. Sabe nomear sombra, trauma e dom como poucos.',
+    momento:'Cansaço de mais um processo e a vergonha silenciosa de entender tudo, mas ainda não viver tudo. A crise de identidade de quem sempre foi o eterno buscador.',
+    pergunta:'O que eu já sei que ainda me recuso a viver?',
+    arc:{
+      1:'Coleciona cursos, terapias e certificados como quem acumula segurança — sabe nomear tudo, mas usa o saber para se proteger e se sentir acima, não para encarnar.',
+      2:'Vive a crise do eterno buscador: entende tudo, vive pouco. Vergonha de ensinar o que ainda não encarnou e cansaço de mais um processo que não termina.',
+      3:'Para de buscar e começa a ser. Lidera pelo exemplo de inteireza, sem discurso — a sua simples presença autoriza o outro a parar de correr.',
+      4:'Faz do próprio caminho um mapa vivo: integra o que percorreu e devolve como trilha para muitos, conectando saberes que pareciam soltos.',
+      5:'A busca se dissolve no encontro. Não há mais o que procurar — você é a prova viva de que a travessia se completa, e isso ensina sem uma palavra.'
+    }},
+  terapeuta:{
+    quemE:'Trabalha com cura e segura o campo em vivências, sessões e grupos. As pessoas se apoiam em você.',
+    momento:'Uma estagnação doce, como gestação sem nome, e a exaustão empática de quem dá demais. A pergunta silenciosa: quem cuida de mim enquanto eu cuido?',
+    pergunta:'Quem me sustenta enquanto eu sustento todo mundo?',
+    arc:{
+      1:'Cuida por precisar ser necessário(a); confunde ajudar com salvar e segura poder sobre o ferido. Esgota-se e, no fundo, cobra reconhecimento.',
+      2:'O curador reativo: sente tudo, sustenta a dor dos outros, mas oscila e se exausta. Cura infinita, dificuldade de cobrar — "quem cuida de mim?".',
+      3:'Não absorve mais, irradia. Regula o campo de uma sala inteira sem pânico, ensina limite e fechamento de campo — cuida sem se perder.',
+      4:'Cria a nova cultura do cuidado: sistemas e redes onde quem sustenta também é sustentado. O cuidado vira estrutura, não sacrifício.',
+      5:'A presença, por si, pacifica. A cura acontece no campo antes de qualquer método — você é remédio sem precisar tocar.'
+    }},
+  facilitador:{
+    quemE:'Guia círculos, vivências e processos coletivos. Sabe abrir, sustentar e fechar um campo grupal.',
+    momento:'O chamado de ir além de conduzir salas — de tecer redes e formar outros que também sustentem campos. O receio do vazio quando você não está no centro.',
+    pergunta:'O que continua de pé quando eu saio da sala?',
+    arc:{
+      1:'Conduz pelo controle da sala — agenda, técnica e a necessidade de que tudo dependa de você. O grupo gira em torno do facilitador, não da vida.',
+      2:'Segura o campo com entrega, mas se cansa de ser o centro e teme o vazio quando sai da sala. "O que continua de pé quando eu não estou?".',
+      3:'Cria campos onde outros líderes nascem. Não puxa o grupo — abre espaço para a inteligência coletiva emergir e se sustentar sem você.',
+      4:'Tece redes entre grupos, círculos e comunidades; conecta o que estava isolado e faz a facilitação virar grade viva.',
+      5:'O campo se auto-organiza na sua presença. Você facilita sem facilitar — basta estar, e o coletivo encontra o próprio ritmo.'
+    }},
+  empreendedor:{
+    quemE:'Empreende com consciência. Seu negócio é estável, ético e funciona.',
+    momento:'O chamado de inovar além do que já dá certo e o medo de perder a segurança ao mudar. O conflito entre a estabilidade e a alma.',
+    pergunta:'O que eu manteria de pé mesmo sem o dinheiro?',
+    arc:{
+      1:'Empreende pela sobrevivência e pelo lucro imediato; mede valor por números e teme perder o que construiu. A alma fica refém da segurança.',
+      2:'Sente o chamado de inovar além do que já dá certo, mas trava no medo de arriscar a estabilidade. Conflito constante entre alma e planilha.',
+      3:'Prototipa modelos vivos de troca — mostra que prosperar pode ser regenerativo. O negócio vira veículo de frequência, não só de renda.',
+      4:'Desenha estruturas que sustentam a Nova Terra na matéria: sistemas econômicos, jurídicos e organizacionais que encarnam o novo paradigma.',
+      5:'O recurso circula através de você sem apego; cria abundância para o Todo e solta — o que se constrói não te pertence, serve.'
+    }},
+  guardiaoterra:{
+    quemE:'Cuida de um pedaço de terra há anos ou décadas. Planta, constrói e recebe em família, comunidade ou ecovila.',
+    momento:'Uma longa espera: preparou o solo quase sozinho para um movimento que demorava — e agora sente a chegada. A pergunta de como fazer a ponte com o mundo exterior.',
+    pergunta:'Estou abrindo a porteira ou guardando o portão só pra mim?',
+    arc:{
+      1:'Defende o território como posse e cerca; guarda o portão só para si, com desconfiança de quem chega. A terra vira muro, não ponte.',
+      2:'Após longa espera e solidão, sente a chegada do movimento — mas hesita em abrir, receoso de que invadam o que cuidou sozinho.',
+      3:'Oferece chão pronto: água, comida, prática e relação real. Ensina pela vivência, não pelo conceito — é o corpo onde a luz pousa.',
+      4:'Faz do território um nó da grade planetária — conecta o seu chão a outros territórios e saberes, tecendo a rede viva da Terra.',
+      5:'A terra e você são um só campo. O lugar irradia por si; quem chega é acolhido pelo solo antes de qualquer palavra.'
+    }},
+  arquiteto:{
+    quemE:'Domina tecnologia e espiritualidade. Fica nos bastidores, com perfil discreto, timidez ou cansaço social.',
+    momento:'Uma prontidão silenciosa: sabe exatamente o que fazer, mas espera o sinal. O medo de se expor e perder o foco.',
+    pergunta:'Estou esperando a hora certa ou me escondendo dela?',
+    arc:{
+      1:'Usa a genialidade para se proteger e controlar nos bastidores; constrói sistemas que dependem de si e teme a exposição como ameaça.',
+      2:'Prontidão silenciosa — sabe o que fazer, mas espera o sinal e se esconde no cansaço social. Medo de se expor e perder o foco.',
+      3:'Constrói a infraestrutura invisível que sustenta todos os palcos — plataformas, redes, proteção — sem precisar de nenhum palco para si.',
+      4:'Arquiteta as grades e os códigos que conectam mundos; o invisível que ele tece passa a mover sistemas inteiros pela estrutura.',
+      5:'Cria o que sustenta sem deixar rastro de autoria. A obra serve ao Todo e some o construtor — pura função, sem ego.'
+    }},
+  infiltrado:{
+    quemE:'Está dentro do sistema — empresa, governo, saúde, educação. Entrou para mudar por dentro.',
+    momento:'Uma divisão interna: sabe que o seu lugar não é mais ali, mas espera o momento estratégico de sair com segurança e reconhecimento.',
+    pergunta:'Ainda mudo o sistema, ou o sistema já me mudou?',
+    arc:{
+      1:'Capturado pela matriz: a competência vira moeda de status e segurança, e o propósito original adormece sob o conforto do cargo.',
+      2:'Divisão interna — sabe que o seu lugar não é mais ali, mas espera o momento de sair. Vive a tensão entre a máscara e a verdade.',
+      3:'Traz os códigos do velho e os traduz para o novo; faz a travessia sem ruptura violenta, abrindo por dentro portas que ninguém abriria.',
+      4:'Reprograma o sistema de dentro: implanta novos padrões em instituições, leis e processos, tecendo o novo na própria estrutura do velho.',
+      5:'Move-se no sistema como água — sem agenda pessoal, apenas onde a mudança precisa acontecer; entra e sai sem deixar guerra.'
+    }},
+  artista:{
+    quemE:'Seu canal é a arte — música, escrita, dança, imagem, voz. Não é hobby, é transmissão.',
+    momento:'A trava entre mostrar e esconder. O medo de não ser levado a sério, de ser chamado de superficial.',
+    pergunta:'Eu crio para transmitir, ou para ser aprovado?',
+    arc:{
+      1:'Cria para ser aprovado(a) e reconhecido(a); a arte vira vitrine de ego e medo do julgamento. A beleza fica refém da validação.',
+      2:'Trava entre mostrar e esconder; teme ser chamado(a) de superficial ou não ser levado(a) a sério. O canal oscila com o medo.',
+      3:'Educa sem explicar — abre corações onde o discurso não entra. A obra transmite frequência direto, sem precisar de defesa.',
+      4:'Ancora códigos de luz na forma — som, imagem e palavra que reorganizam o sistema nervoso coletivo e semeiam o novo na cultura.',
+      5:'A arte deixa de ter autor; é canal puro. A beleza que passa por você pacifica campos e desperta sem que você saiba como.'
+    }},
+  paemae:{
+    quemE:'Seu campo principal são as crianças. Gesta, educa ou acompanha almas que já nasceram com o véu fino.',
+    momento:'Solidão e invisibilidade — a sensação de que o seu ativismo na cozinha, na escola e na rotina vale menos que o do palco.',
+    pergunta:'Formo seres livres, ou herdeiros do que eu não vivi?',
+    arc:{
+      1:'Educa para moldar e controlar — projeta nos filhos o que não viveu, transmitindo medo e dever como herança. O lar reproduz o velho.',
+      2:'Sente solidão e invisibilidade; acha que o ativismo da cozinha e da rotina vale menos que o do palco. Cuida sem se sentir liderança.',
+      3:'Forma seres livres, não herdeiros da própria ferida. Ancora valores no dia a dia — lidera de forma celular, silenciosa e irreversível.',
+      4:'Gesta o tecido humano da Nova Terra: cria a base sobre a qual todo o resto se apoia, multiplicando o campo célula a célula.',
+      5:'A presença materna/paterna vira campo de criação; nutre almas de véu fino sem nada exigir — só sustentando o vir-a-ser.'
+    }},
+  tradutor:{
+    quemE:'Fala duas línguas fluentemente: ciência e espírito, razão e intuição, mercado e ecovila.',
+    momento:'O cansaço de ser mal-entendido pelos dois lados. O medo de ser raso para um e místico demais para o outro.',
+    pergunta:'Eu traduzo pra agradar, ou pra criar a terceira língua?',
+    arc:{
+      1:'Usa a fluência nos dois mundos para ter razão e se posicionar acima; traduz para vencer o debate, não para unir. A ponte vira trincheira.',
+      2:'Cansaço de ser mal-entendido pelos dois lados — raso para um, místico demais para o outro. Medo de se perder ao se traduzir.',
+      3:'Cria a terceira linguagem: torna a Nova Terra compreensível sem diluir. Lidera pela integração, deixando mundos se encontrarem sem guerra.',
+      4:'Tece pontes estruturais entre paradigmas — linguagens e modelos que fazem ciência e espírito operarem juntos, não em lados opostos.',
+      5:'Fala a língua do silêncio comum a tudo; a ponte se dissolve porque já não há dois lados — só uma realidade que você ajuda a lembrar.'
+    }},
+  nomade:{
+    quemE:'Não tem terra fixa, negócio fixo nem comunidade fixa. A sua casa é o movimento.',
+    momento:'A falta de pertencimento e o cansaço de recomeçar. A dúvida se está fugindo ou servindo.',
+    pergunta:'Estou indo em direção a algo, ou fugindo de ficar?',
+    arc:{
+      1:'Move-se para fugir — do enraizamento, do compromisso, da dor de ficar. A liberdade vira desculpa, e a circulação, dispersão.',
+      2:'Falta de pertencimento e cansaço de recomeçar; dúvida se está servindo ou apenas escapando. "Vou em direção a algo, ou fujo de ficar?".',
+      3:'Costura territórios: leva códigos de uma terra para outra, de um grupo para outro, mantendo a grade viva. A casa é o movimento a serviço.',
+      4:'Sincroniza redes, comunidades e saberes distantes para atuarem como um só organismo — o tecelão da grade planetária.',
+      5:'É circulação pura — passa onde precisa passar, deixa o que precisa deixar e segue, sem se prender, mantendo a Terra pulsando.'
+    }}
+};
+
+/* ---------- 4 PERGUNTAS QUE DEFINEM O ARQUÉTIPO ---------- */
+const AQ = [
+  {k:'meio', w:2, q:'Onde a sua liderança mais acontece — o seu meio natural?', opts:[
+    {key:'buscador', t:'No exemplo de quem me tornei — encarnando o que aprendi.', s:'Lidero virando prova viva do caminho que percorri.'},
+    {key:'terapeuta', t:'No cuidado e na cura, de perto, um a um.', s:'Sessões, vivências e grupos — as pessoas se apoiam em mim.'},
+    {key:'facilitador', t:'Guiando círculos, grupos e processos coletivos.', s:'Abro e seguro o campo onde o coletivo se transforma.'},
+    {key:'empreendedor', t:'Em negócios e projetos que dão forma viável ao novo.', s:'Transformo visão em estrutura que se sustenta na matéria.'},
+    {key:'guardiaoterra', t:'Na terra e no território — no presencial, no concreto.', s:'Cuido de um chão real: planta, casa, comunidade, ecovila.'},
+    {key:'arquiteto', t:'Nos bastidores, construindo o que sustenta tudo.', s:'Tecnologia e espírito a serviço da estrutura invisível.'},
+    {key:'infiltrado', t:'Por dentro de instituições e sistemas que já existem.', s:'Empresa, governo, saúde, educação — mudo por dentro.'},
+    {key:'artista', t:'Na arte e na beleza — criação como linguagem.', s:'Música, escrita, imagem, voz: transmissão, não passatempo.'},
+    {key:'paemae', t:'No lar e na formação das próximas gerações.', s:'Gesto, educo e acompanho almas que vêm com o véu fino.'},
+    {key:'tradutor', t:'Na fala e na escrita que traduzem mundos.', s:'Faço ciência e espírito se entenderem sem diluir nenhum.'},
+    {key:'nomade', t:'Em movimento, conectando pessoas, lugares e redes.', s:'Levo códigos de um território a outro; a casa é o movimento.'}
+  ]},
+  {k:'buscam', w:1, q:'O que as pessoas mais buscam em você?', opts:[
+    {key:'buscador', t:'Clareza e profundidade de quem já percorreu o caminho.', s:'Em mim encontram o atalho de quem já trilhou o longo caminho.'},
+    {key:'terapeuta', t:'Acolhimento, escuta e cura.', s:'Procuram um lugar seguro para se reconstruir.'},
+    {key:'facilitador', t:'Articulação e visão de conjunto.', s:'Querem alguém que segure o grupo e revele o todo.'},
+    {key:'empreendedor', t:'Capacidade de fazer acontecer, de viabilizar.', s:'Buscam quem aterra a ideia e faz a coisa girar.'},
+    {key:'guardiaoterra', t:'Enraizamento, pertencimento, chão firme.', s:'Vêm atrás de raiz, relação e um chão onde pousar.'},
+    {key:'arquiteto', t:'Solução e a estrutura invisível que sustenta.', s:'Procuram quem resolve nos bastidores o que ninguém vê.'},
+    {key:'infiltrado', t:'Estratégia e leitura fina do sistema.', s:'Querem quem conhece o jogo por dentro e abre portas.'},
+    {key:'artista', t:'Beleza e inspiração que tocam sem explicar.', s:'Buscam o que a arte abre e o discurso não alcança.'},
+    {key:'paemae', t:'Cuidado e formação de base.', s:'Procuram a presença que forma e sustenta o cotidiano.'},
+    {key:'tradutor', t:'Tradução e ponte entre mundos diferentes.', s:'Querem quem traduz o complexo sem perder a alma.'},
+    {key:'nomade', t:'Conexão e circulação entre grupos e territórios.', s:'Buscam quem costura redes e mantém tudo conectado.'}
+  ]},
+  {k:'pergunta', w:2, q:'Qual pergunta mais ecoa dentro de você?', opts:[
+    {key:'buscador', t:'"O que eu já sei, mas ainda me recuso a viver?"', s:'Entendo tudo — e sinto que isso já não me basta.'},
+    {key:'terapeuta', t:'"Quem me sustenta enquanto eu sustento todo mundo?"', s:'Cuido de todos e me esqueço de quem cuida de mim.'},
+    {key:'facilitador', t:'"O que continua de pé quando eu saio da sala?"', s:'Receio que nada se sustente sem a minha condução.'},
+    {key:'empreendedor', t:'"O que eu manteria de pé mesmo sem o dinheiro?"', s:'Disputo entre a segurança e o que a alma pede.'},
+    {key:'guardiaoterra', t:'"Estou abrindo a porteira ou guardando o portão só pra mim?"', s:'Preparei o solo sozinho; agora hesito em abrir.'},
+    {key:'arquiteto', t:'"Estou esperando a hora certa ou me escondendo dela?"', s:'Sei o que fazer, mas adio a hora de aparecer.'},
+    {key:'infiltrado', t:'"Ainda mudo o sistema, ou o sistema já me mudou?"', s:'Entrei para transformar — e às vezes me acomodo.'},
+    {key:'artista', t:'"Eu crio para transmitir, ou para ser aprovado?"', s:'Oscilo entre mostrar a obra e me esconder dela.'},
+    {key:'paemae', t:'"Formo seres livres, ou herdeiros do que eu não vivi?"', s:'Temo passar adiante a ferida em vez da liberdade.'},
+    {key:'tradutor', t:'"Eu traduzo pra agradar, ou pra criar a terceira língua?"', s:'Canso de ser raso pra um lado e místico demais pro outro.'},
+    {key:'nomade', t:'"Estou indo em direção a algo, ou fugindo de ficar?"', s:'Entre servir em movimento e escapar do enraizamento.'}
+  ]},
+  {k:'dom', w:2, q:'O seu dom mais natural — o que você faz quase sem esforço?', opts:[
+    {key:'buscador', t:'Virar prova viva — dar permissão pelo meu próprio exemplo.', s:'Encarno o caminho; a minha vida autoriza a do outro.'},
+    {key:'terapeuta', t:'Regular o campo, segurar o caos de uma sala sem pânico.', s:'A minha presença acalma e reorganiza o ambiente.'},
+    {key:'facilitador', t:'Criar campos onde outros líderes nascem.', s:'Abro espaço para a inteligência do grupo emergir.'},
+    {key:'empreendedor', t:'Aterrar visão em estrutura concreta e sustentável.', s:'Dou chão e forma viável ao que ainda é sonho.'},
+    {key:'guardiaoterra', t:'Oferecer chão pronto — memória e relação real.', s:'Ofereço terra, água e vivência, não conceito.'},
+    {key:'arquiteto', t:'Sustentar todos os palcos sem precisar de nenhum.', s:'Construo a infraestrutura invisível que segura tudo.'},
+    {key:'infiltrado', t:'Abrir portas por dentro, traduzir os códigos do velho.', s:'Faço a travessia sem ruptura, de dentro do sistema.'},
+    {key:'artista', t:'Curar e abrir o que o discurso não alcança.', s:'Ancoro frequência direto no sistema nervoso coletivo.'},
+    {key:'paemae', t:'Construir o tecido humano onde tudo se apoia.', s:'Formo a base, célula a célula, de forma irreversível.'},
+    {key:'tradutor', t:'Tornar o complexo compreensível sem diluir.', s:'Crio a terceira linguagem entre mundos que não se falam.'},
+    {key:'nomade', t:'Costurar o todo e manter a circulação viva.', s:'Mantenho a grade da Terra pulsando entre os nós.'}
+  ]}
+];
+
+/* ---------- FAIXAS 3D→7D ---------- */
+const BANDS = {
+  1:{code:'3D', nm:'Estrutura', sub:'Ancorar na Matéria', color:'var(--c3d)',
+     ess:'Você lidera ancorado na matéria e no concreto — força de execução, mas ainda muito do medo e do controle.',
+     sombras:['Preciso controlar tudo para me sentir seguro(a).','Se o outro brilha, eu perco — não há espaço pra todos.','Primeiro preciso garantir o meu; não há o bastante.']},
+  2:{code:'4D', nm:'Cura', sub:'Conectar e Sustentar', color:'var(--c4d)',
+     ess:'Você está no limiar: o véu se afina, a sensibilidade desperta — e a cura ainda pode te prender. Aqui mora a maior parte da travessia.',
+     sombras:['Querer dinheiro, estrutura ou visibilidade é pouco espiritual.','Só tenho valor enquanto sou necessário(a) — preciso me esgotar pra merecer.','Preciso me curar mais um pouco antes de poder liderar.']},
+  3:{code:'5D', nm:'Coração', sub:'Irradiar e Transformar', color:'var(--c5d)',
+     ess:'Você já toca o Coração: não convence, irradia. A presença que eleva o campo sem esforço.',
+     sombras:['Se eu descer à matéria — rotina, dinheiro, estrutura — perco a minha vibração.','Já cheguei; não preciso mais me ancorar.','No fundo, estou um pouco acima dessas questões mundanas.']},
+  4:{code:'6D', nm:'Integração', sub:'Tecer e Ancorar Códigos', color:'var(--c6d)',
+     ess:'Você tece redes e ancora códigos — move sistemas pela forma, para além do Coração.',
+     sombras:['O corpo e o concreto são distração — só o sutil importa.','Não preciso de obra, forma ou comunidade pra ancorar o que vejo.']},
+  5:{code:'7D', nm:'Luz Pura', sub:'Servir e Cocriar', color:'var(--c7d)',
+     ess:'Você opera na Luz: presença que pacifica, serviço ao Todo. O alto do arco vivo de liderança.',
+     sombras:['Encarnar é quase um retrocesso; o plano terreno não me diz respeito.','Posso servir ao Todo sem precisar de chão, parceiros ou estrutura.']}
+};
+
+/* ---------- PRIMEIRA ATIVAÇÃO (prática por etapa) ---------- */
+const PRACT = {
+  1:{nome:'Ritual da Abundância Presente', porque:'Para dissolver a lente da escassez e do controle que mantém a sua liderança presa à 3D.', passos:[
+    'Toda manhã, antes de trabalhar, nomeie em voz alta três coisas que já existem e te sustentam.',
+    'Pergunte: "onde, hoje, eu posso soltar um único fio de controle?" — e solte.',
+    'Repare, ao longo do dia, quando o medo de perder dita uma decisão. Só perceber já começa a abrir a mão.']},
+  2:{nome:'Ancoragem e Limite', porque:'Para sair da cura infinita e da sensibilidade sem chão — o movimento que abre a sua passagem para a 5D.', passos:[
+    'Aterramento (5 min): pés no chão, respiração no ventre, sentindo o corpo como casa antes de servir qualquer pessoa.',
+    'Diga um "não" honesto hoje. O limite é a forma madura do amor quando o "sim" te esvazia.',
+    'Ao fim de uma conversa ou atendimento denso, feche o campo: "o que é do outro, devolvo; o que é meu, fico."']},
+  3:{nome:'Encarnar o Coração', porque:'Para descer à matéria sem perder a vibração — a humildade encarnada que faz o seu dom irradiar e ser sustentado.', passos:[
+    'Escolha uma tarefa terrena banal (a louça, as contas, uma caminhada) e faça-a como prática espiritual, inteiramente presente.',
+    'Cobre por uma entrega esta semana sem culpa e sem reduzir o valor — a troca digna faz a frequência circular.',
+    'Antes de qualquer projeto, regule primeiro o seu sistema: a sua presença serena já é metade do trabalho.']},
+  4:{nome:'Trazer ao Corpo', porque:'Para não habitar só o sutil — ancorar na forma concreta a visão que você já enxerga.', passos:[
+    'Pegue um insight ou visão recente e dê a ele uma forma mínima hoje: uma página, um protótipo, uma mensagem enviada.',
+    'Volte ao corpo: movimento e respiração conscientes, para não evaporar no abstrato.',
+    'Divida a visão com alguém que possa sustentá-la com você — você não foi feito para ver longe sozinho.']},
+  5:{nome:'Escolher Ficar', porque:'Para encarnar o serviço, em vez de desencarnar disfarçado de transcendência.', passos:[
+    'Comprometa-se hoje com um vínculo, um lugar ou uma forma concreta a serviço do Todo.',
+    'Aproxime-se de um parceiro que materializa — alguém que dá chão ao que você canaliza.',
+    'Faça uma única coisa simples e terrena com presença total, como âncora na Terra.']}
+};
+
+/* ---------- 5 CENÁRIOS (faixa 3D→7D) ---------- */
+const Q = [
+  {k:'q1', q:'No seu trabalho, quando algo foge do controle, o que acontece primeiro?', opts:[
+    {t:'Reajo e retomo as rédeas — preciso do controle.', a:1},
+    {t:'Travo e fico remoendo depois.', a:2},
+    {t:'Respiro e respondo do centro.', a:3},
+    {t:'Recebo como informação do campo, sem me abalar.', a:4}]},
+  {k:'q2', q:'No fundo, de onde vem a maior parte da sua energia para servir?', opts:[
+    {t:'De garantir o meu e provar o meu valor.', a:1},
+    {t:'De não suportar ver o sofrimento — preciso resgatar.', a:2},
+    {t:'De transbordamento: sirvo porque sou, não pra me preencher.', a:3},
+    {t:'De um chamado maior que eu, sem esperar retorno.', a:5}]},
+  {k:'q3', q:'Quando alguém da sua área brilha ou é reconhecido, por dentro:', opts:[
+    {t:'Comparação e incômodo — "por que ele(a) e não eu?".', a:1},
+    {t:'Finjo que estou feliz, mas mexe comigo.', a:2},
+    {t:'Fico feliz de verdade: há espaço para todos.', a:3},
+    {t:'Já penso em como somar com ele(a) pra ampliar o todo.', a:4}]},
+  {k:'q4', q:'Sobre assumir um lugar maior e mais visível na sua missão:', opts:[
+    {t:'Medo de não dar conta ou de perder o que já tenho.', a:1},
+    {t:'Quero, mas travo: não me sinto pronto(a) ou digno(a).', a:2},
+    {t:'Aceito se servir ao propósito, sem precisar do holofote.', a:3},
+    {t:'Vejo como abrir caminho pra muitos; o ego não é a questão.', a:4}]},
+  {k:'q5', q:'Sobre cobrar bem e prosperar pelo seu dom:', opts:[
+    {t:'O aperto financeiro dita as minhas decisões.', a:1},
+    {t:'Sinto culpa — acho que querer isso é pouco espiritual.', a:2},
+    {t:'Cobro com tranquilidade; o recurso flui pra missão.', a:3},
+    {t:'O recurso aparece onde sirvo; uso como ferramenta do todo.', a:4}]}
+];
+
+/* ---------- ESTADO + FLUXO ---------- */
+const state = { arq:{}, ans:{}, lead:{} };
+let steps = [];
+function shuffle(a){ for(let i=a.length-1;i>0;i--){ const j=Math.floor(Math.random()*(i+1)); [a[i],a[j]]=[a[j],a[i]]; } return a; }
+function buildSteps(){
+  const arqs = AQ.map(q=>({type:'aq', q, opts:shuffle(q.opts.map(o=>({...o})))}));
+  const freq = Q.map(q=>({type:'q', q, opts:shuffle(q.opts.map(o=>({...o})))}));
+  shuffle(freq);
+  steps = [ ...arqs, ...freq, {type:'capture'} ];
+}
+buildSteps();
+let idx = -1;
+
+const stage = document.getElementById('stage');
+const topbar = document.getElementById('topbar');
+
+function render(){
+  if(idx===-1){ renderIntro(); topbar.style.display='none'; return; }
+  topbar.style.display='flex';
+  document.getElementById('progFill').style.width = (idx/steps.length)*100 + '%';
+  document.getElementById('progLabel').textContent = (idx+1)+' / '+steps.length;
+  document.getElementById('backBtn').disabled = (idx===0);
+  const s = steps[idx];
+  if(s.type==='aq') renderArq(s);
+  else if(s.type==='q') renderChoice(s);
+  else if(s.type==='capture') renderCapture();
+}
+
+function renderIntro(){
+  stage.innerHTML = `
+  <div class="screen">
+    <div class="eyebrow">Academia de Lideranças da Nova Terra</div>
+    <h1>Descubra o seu <em>Arquétipo</em><br>e a sua etapa de<br>transição para a <em>5D</em></h1>
+    <p class="lede">Um espelho para revelar a sua assinatura de liderança na Nova Terra, os seus dons de apoio e em que ponto da travessia 3D → 7D você lidera hoje — com as sombras que ainda podem estar te segurando.</p>
+    <div class="note">Responda pensando na sua <b>atuação no mundo</b> — seu trabalho, sua missão. Sem resposta certa: o espelho só funciona com honestidade.</div>
+    <div class="start-row"><button class="btn" onclick="next()">Começar</button></div>
+  </div>`;
+}
+
+function renderArq(s){
+  const cur = state.arq[s.q.k];
+  const opts = s.opts.map(o=>`<button class="choice ${cur===o.key?'sel':''}" onclick="pickArq('${s.q.k}','${o.key}')"><span class="cmain">${o.t}</span>${o.s?`<span class="csub">${o.s}</span>`:''}</button>`).join('');
+  stage.innerHTML = `
+  <div class="screen">
+    <div class="qmeta">A sua assinatura</div>
+    <div class="qtext">${s.q.q}</div>
+    <div class="choices">${opts}</div>
+  </div>`;
+}
+function pickArq(k,key){
+  state.arq[k]=key;
+  document.querySelectorAll('.choice').forEach(c=>c.classList.remove('sel'));
+  if(event&&event.target) event.target.classList.add('sel');
+  setTimeout(next,200);
+}
+
+function renderChoice(s){
+  const cur = state.ans[s.q.k];
+  const opts = s.opts.map(o=>`<button class="choice ${cur===o.a?'sel':''}" onclick="pickChoice('${s.q.k}',${o.a})">${o.t}</button>`).join('');
+  stage.innerHTML = `
+  <div class="screen">
+    <div class="qmeta">Como você lidera de verdade</div>
+    <div class="qtext">${s.q.q}</div>
+    <div class="choices">${opts}</div>
+  </div>`;
+}
+function pickChoice(k,a){
+  state.ans[k]=a;
+  document.querySelectorAll('.choice').forEach(c=>c.classList.remove('sel'));
+  if(event&&event.target) event.target.classList.add('sel');
+  setTimeout(next,220);
+}
+
+function renderCapture(){
+  const L=state.lead||{};
+  stage.innerHTML = `
+  <div class="screen">
+    <div class="qmeta">O seu resultado está pronto</div>
+    <div class="qtext">Para onde enviamos o seu <span class="pf">arquétipo</span>?</div>
+    <p class="cap-intro">Preencha para revelar o seu resultado — e recebê-lo também por email:</p>
+    <ul class="teaser">
+      <li>O seu <b>Arquétipo de liderança</b> e a sua contribuição para a Nova Terra</li>
+      <li>Os seus <b>dons de apoio</b> (a sua Mandala)</li>
+      <li>A sua <b>etapa na travessia</b> 3D → 7D e as <b>sombras</b> que podem estar te segurando</li>
+    </ul>
+    <div class="capform">
+      <input id="cf-nome" type="text" placeholder="Seu nome" value="${L.nome||''}" oninput="capValidate()">
+      <input id="cf-email" type="email" placeholder="Seu melhor email" value="${L.email||''}" oninput="capValidate()">
+      <input id="cf-wpp" type="tel" placeholder="WhatsApp (com DDD)" value="${L.whatsapp||''}">
+      <input id="cf-insta" type="text" placeholder="@seu_instagram" value="${L.instagram||''}">
+    </div>
+    <div class="open-row"><button class="btn" id="capBtn" disabled onclick="submitCapture()">Revelar meu arquétipo →</button></div>
+    <p class="cap-priv">Seus dados são usados apenas para enviar o seu resultado e novidades da Academia. Sem spam.</p>
+  </div>`;
+  capValidate();
+}
+function capValidate(){
+  const n=(document.getElementById('cf-nome')||{}).value||'';
+  const e=(document.getElementById('cf-email')||{}).value||'';
+  const ok = n.trim().length>=2 && /^[^@\s]+@[^@\s]+\.[^@\s]+$/.test(e.trim());
+  const b=document.getElementById('capBtn'); if(b) b.disabled=!ok;
+}
+function submitCapture(){
+  state.lead={
+    first_name:(document.getElementById('cf-nome').value||'').trim(),
+    email:(document.getElementById('cf-email').value||'').trim(),
+    phone:(document.getElementById('cf-wpp').value||'').trim(),
+    instagram:(document.getElementById('cf-insta').value||'').trim()
+  };
+  try{ if(CAPTURE_ENDPOINT){ fetch(CAPTURE_ENDPOINT,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({email:state.lead.email,first_name:state.lead.first_name,phone:state.lead.phone,instagram:state.lead.instagram,tipo:'quiz',ts:new Date().toISOString()})}).catch(function(){}); } }catch(e){}
+  showResult();
+}
+
+function next(){ idx++; if(idx>=steps.length){ showResult(); return; } render(); }
+function goBack(){ if(idx>0){ idx--; render(); } else { idx=-1; render(); } }
+
+/* ---- cálculo ---- */
+function arqRank(){
+  const sc={}; PORDER.forEach(k=>sc[k]=0);
+  AQ.forEach(q=>{ const a=state.arq[q.k]; if(a&&sc[a]!=null) sc[a]+=q.w; });
+  const ranked=PORDER.slice().sort((x,y)=> sc[y]-sc[x]);
+  return { porta:ranked[0], mandala:ranked.slice(1).filter(k=>sc[k]>0).slice(0,2), sc };
+}
+function bandOf(){ let s=0,c=0; Q.forEach(q=>{ if(state.ans[q.k]!=null){s+=state.ans[q.k];c++;} }); const avg=c?s/c:2; return Math.max(1,Math.min(5,Math.round(avg))); }
+function posPct(a){ return ((5-a)/4)*100; }
+function resultData(){
+  const r=arqRank(); const pa=bandOf();
+  return { perfil:r.porta, perfil_nome:P[r.porta]?P[r.porta].n:'', faixa:BANDS[pa].code, faixa_nome:BANDS[pa].nm, mandala:r.mandala.map(k=>P[k].n) };
+}
+
+function showResult(){
+  topbar.style.display='none';
+  const r=arqRank(); const prof=P[r.porta]; const mand=r.mandala; const pa=bandOf(); const band=BANDS[pa];
+  const ax=ARQX[r.porta];
+
+  let cross;
+  if(pa<3) cross='A <b>5D — o Coração</b> é o seu próximo limiar. A travessia está logo ali, esperando você dar o salto.';
+  else if(pa===3) cross='Você está <b>cruzando para a 5D agora</b> — o Coração já pulsa na sua liderança. O cuidado é não regredir.';
+  else cross='Você já <b>cruzou o limiar da 5D</b> e opera além dele. O cuidado agora é manter os pés na Terra.';
+
+  const rungs=[5,4,3,2,1].map(a=>`<div class="rung ${a===3?'is5d':''}" style="top:${posPct(a)}%"><div class="rl">${BANDS[a].code} · ${BANDS[a].nm}${a===3?' ✦':''}</div><div class="rline"></div></div>`).join('');
+  const mandHTML = mand.length ? `<div class="res-block"><div class="lbl">Os seus dons de apoio · a Mandala</div><div class="mandala">${mand.map(k=>`<div class="gift"><div class="gn">${P[k].n}</div><div class="gd">${P[k].dom}</div></div>`).join('')}</div></div>` : '';
+
+  const arcHTML = ax ? `<div class="res-block">
+      <div class="lbl">Como ${prof.n} lidera em cada frequência · 3D → 7D</div>
+      <p class="arc-intro">O seu dom é um só — o que muda é a <b>frequência</b> com que você o vive. Veja como ${prof.n} se expressa em cada dimensão do arco vivo de liderança, da contração à luz. A sua faixa de hoje está destacada.</p>
+      <div class="arc7">
+        ${[1,2,3,4,5].map(b=>`<div class="arc-row ${b===pa?'on':''}" style="${b===pa?'border-color:'+BANDS[b].color:''}">
+          <div class="arc-band" style="color:${BANDS[b].color}"><b>${BANDS[b].code}</b><small>${BANDS[b].nm}</small></div>
+          <div class="arc-txt">${ax.arc[b]}${b===pa?'<span class="arc-here">você opera aqui hoje</span>':''}</div>
+        </div>`).join('')}
+      </div>
+    </div>` : '';
+  const sombrasHTML = band.sombras.map(s=>`<li>${s}</li>`).join('');
+  const pr = PRACT[pa];
+  const practiceHTML = pr ? `<div class="pratica">
+      <div class="pk">A sua primeira ativação · comece hoje</div>
+      <div class="pnome">${pr.nome}</div>
+      <p class="pq">${pr.porque}</p>
+      <ol>${pr.passos.map(s=>`<li>${s}</li>`).join('')}</ol>
+      <p class="pfoot">Este é o <b>primeiro portal</b> — uma prática para a sua etapa. No seu Mapa completo, ela vira um <b>plano inteiro</b>: práticas para cada área da sua vida e do seu trabalho, em três movimentos — Fundação, Travessia e Sustentação — com as sombras que são, de fato, as suas.</p>
+    </div>` : '';
+
+  stage.innerHTML = `
+  <div class="result">
+    <div class="res-eyebrow">O seu espelho</div>
+
+    <div class="arq-card">
+      <div class="sou">Você é</div>
+      <div class="arq-nome">${prof.n}</div>
+      <div class="arq-desc">${prof.d}.</div>
+      <div class="arq-dom">${prof.dom}</div>
+      ${ax?`<div class="arq-id">
+        <div class="aid"><span>Quem é</span><p>${ax.quemE}</p></div>
+        <div class="aid"><span>O momento que você atravessa</span><p>${ax.momento}</p></div>
+        <div class="aid"><span>A sua pergunta-guia</span><p>“${ax.pergunta}”</p></div>
+      </div>`:''}
+    </div>
+
+    <div class="valid">
+      <div class="vk">A sua contribuição</div>
+      <p class="lead-line">O mundo que está nascendo precisa de ${prof.n}.</p>
+      <p>A sua função no organismo da Nova Terra é <b>${prof.contrib}</b>. Isso é real, necessário e insubstituível — não é pouco, e não é acaso você ter chegado até aqui.</p>
+      <p>Mas há uma diferença entre <b>ter o dom</b> e <b>assumir a liderança por inteiro</b>. Para isso, é preciso equalizar a sua frequência de forma estável na 5D e adiante — e isso não se conquista por esforço. Pede compreender a fundo os seus <b>desafios pessoais e profissionais</b>, enxergar como você atua hoje em <b>cada área da sua vida e do seu trabalho</b>, <b>ancorar a sua missão</b> como liderança e sustentar um <b>plano de práticas consistente</b> de expansão da consciência. É exatamente esse o caminho do seu Mapa de Evolução.</p>
+    </div>
+
+    ${mandHTML}
+
+    ${arcHTML}
+
+    <div class="res-block">
+      <div class="lbl">A sua etapa na travessia · 3D → 7D</div>
+      <div class="etapa-wrap">
+        <div class="ladder">
+          ${rungs}
+          <div class="track"></div>
+          <div class="you" style="top:${posPct(pa)}%;color:${band.color};background:${band.color}"></div>
+          <div class="youlbl" style="top:${posPct(pa)}%">você está aqui</div>
+        </div>
+        <div class="etapa-text">
+          <span class="et-band">${band.code} · ${band.nm} — ${band.sub}</span>
+          ${band.ess}
+          <div class="etapa-5d">${cross}</div>
+        </div>
+      </div>
+
+      <div class="sombras">
+        <div class="sk">Sombras e crenças ocultas que podem estar te segurando</div>
+        <div class="sintro">Em toda etapa há vozes silenciosas que puxam a liderança de volta — e prendem a sua frequência abaixo do que ela já poderia sustentar. Para a sua etapa, estas costumam ser as mais comuns:</div>
+        <ul>${sombrasHTML}</ul>
+        <div class="strigger">Estas são <b>possibilidades</b> da sua etapa — não um diagnóstico. Quais delas operam de fato em você, em silêncio, em cada área da sua vida e do seu trabalho? É isso que o seu <b>Mapa de Evolução</b> revela — com o relatório completo e o plano de práticas para dissolvê-las e estabilizar a sua frequência.</div>
+      </div>
+    </div>
+
+    ${practiceHTML}
+
+    <div class="cta">
+      <div class="k">O próximo passo da travessia</div>
+      <h2>Veja o seu <em>Mapa de Evolução</em> completo</h2>
+      <p class="sub">A autoavaliação profunda da sua liderança: como o seu arquétipo opera em cada área do seu trabalho e da sua vida, em que dimensão você atua de fato, quais sombras são realmente suas, o seu relatório detalhado e o seu plano de práticas para ancorar e estabilizar a 5D.</p>
+      <a class="btn" href="${MAPA_URL}">Quero o meu mapa completo →</a>
+    </div>
+
+    <div class="restart"><button class="back" onclick="restart()">↺ Refazer</button></div>
+  </div>`;
+  window.scrollTo(0,0);
+}
+
+function restart(){ state.arq={}; state.ans={}; state.lead={}; buildSteps(); idx=-1; render(); }
+
+render();
+</script>
+</body>
+</html>
