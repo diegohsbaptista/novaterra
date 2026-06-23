@@ -339,7 +339,7 @@
    ► COLE AQUI A URL DA LANDING PAGE DAS ATIVAÇÕES ◄
    ============================================================ */
 const LP_URL = "#";
-const CAPTURE_ENDPOINT = "https://formspree.io/f/xlgyeqqk"; // ► webhook da automação de email ◄
+const CAPTURE_ENDPOINT = "https://hook.us2.make.com/di8nys4yzx72wt7waoepja5ff34gesev"; // ► webhook da automação de email ◄
 
 /* ---------- FAIXAS (altitude 1..5) ---------- */
 const BANDS = {
@@ -963,7 +963,7 @@ function cap(s){ return s.charAt(0).toUpperCase()+s.slice(1); }
 function escapeHTML(s){ return s.replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c])); }
 function restart(){ state.consc={}; state.prat={}; state.asp={}; state.cocria={}; state.projeto=''; state.semente=''; buildSteps(); idx=-1; render(); }
 
-function capturarWaitlist(){
+async function capturarWaitlist(){
   const email = state.lead?.email || '';
   const nome = state.lead?.first_name || 'Líder';
   const phone = state.lead?.phone || '';
@@ -974,7 +974,8 @@ function capturarWaitlist(){
   // envia pro Make
   try{
     if(CAPTURE_ENDPOINT){
-      fetch(CAPTURE_ENDPOINT, {
+      // A palavra "await" obriga a página a esperar o Make processar os dados
+      await fetch(CAPTURE_ENDPOINT, {
         method: 'POST',
         headers: {'Content-Type': 'application/json'},
         body: JSON.stringify({
@@ -985,9 +986,11 @@ function capturarWaitlist(){
           tipo: 'mapa',
           ts: new Date().toISOString()
         })
-      }).catch(function(){});
+      });
     }
-  }catch(e){}
+  }catch(e){
+    // Erro ignorado para não travar a tela
+  }
   
   // mostra mensagem
   alert('✅ Perfeito, '+nome+'!\n\nSeu email foi registrado na lista de espera.\n\nVocê será um(a) dos(as) primeiros(as) a receber o convite quando a Jornada de Ativação for lançada.');
