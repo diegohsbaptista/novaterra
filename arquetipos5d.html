@@ -543,8 +543,7 @@ function renderCapture(){
   stage.innerHTML = `
   <div class="screen">
     <div class="qmeta">O seu resultado está pronto</div>
-    <div class="qtext">Para onde enviamos o seu <span class="pf">arquétipo</span>?</div>
-    <p class="cap-intro">Preencha para revelar o seu resultado — e recebê-lo também por email:</p>
+    <p class="cap-intro">Preencha para revelar o seu resultado:</p>
     <ul class="teaser">
       <li>O seu <b>Arquétipo de liderança</b> e a sua contribuição para a Nova Terra</li>
       <li>Os seus <b>dons de apoio</b> (a sua Mandala)</li>
@@ -557,7 +556,6 @@ function renderCapture(){
       <input id="cf-insta" type="text" placeholder="@seu_instagram" value="${L.instagram||''}">
     </div>
     <div class="open-row"><button class="btn" id="capBtn" disabled onclick="submitCapture()">Revelar meu arquétipo →</button></div>
-    <p class="cap-priv">Seus dados são usados apenas para enviar o seu resultado e novidades da Academia. Sem spam.</p>
   </div>`;
   capValidate();
 }
