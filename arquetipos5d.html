@@ -601,7 +601,25 @@ async function submitCapture(){
   showResult();
 }
 
-function next(){ idx++; if(idx>=steps.length){ showResult(); return; } render(); }
+function next(){ 
+  // 1. Verifica se estamos tentando ir para o resultado final
+  if (idx + 1 >= steps.length) {
+    // 2. Trava de segurança: Se o lead não estiver preenchido, manda para a captura
+    if (!state.lead || !state.lead.email) {
+      idx = steps.length - 1; // Força ir para a última etapa (captura)
+      render();
+      return; // Interrompe o avanço
+    }
+  }
+
+  // 3. Avanço normal
+  idx++; 
+  if(idx >= steps.length){ 
+    showResult(); 
+    return; 
+  } 
+  render(); 
+}
 function goBack(){ if(idx>0){ idx--; render(); } else { idx=-1; render(); } }
 
 /* ---- cálculo ---- */
