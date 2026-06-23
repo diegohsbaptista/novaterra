@@ -193,7 +193,7 @@
    CAPTURE_ENDPOINT = webhook da sua automação de email
    ============================================================ */
 const MAPA_URL = "https://mapadeevolucao.lovable.app";
-const CAPTURE_ENDPOINT = "https://formspree.io/f/xlgyeqqk";
+const CAPTURE_ENDPOINT = "https://hook.us2.make.com/di8nys4yzx72wt7waoepja5ff34gesev";
 
 /* ---------- 11 PERFIS ---------- */
 const P = {
@@ -567,14 +567,35 @@ function capValidate(){
   const ok = n.trim().length>=2 && /^[^@\s]+@[^@\s]+\.[^@\s]+$/.test(e.trim());
   const b=document.getElementById('capBtn'); if(b) b.disabled=!ok;
 }
-function submitCapture(){
+async function submitCapture(){
   state.lead={
     first_name:(document.getElementById('cf-nome').value||'').trim(),
     email:(document.getElementById('cf-email').value||'').trim(),
     phone:(document.getElementById('cf-wpp').value||'').trim(),
     instagram:(document.getElementById('cf-insta').value||'').trim()
   };
-  try{ if(CAPTURE_ENDPOINT){ fetch(CAPTURE_ENDPOINT,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({email:state.lead.email,first_name:state.lead.first_name,phone:state.lead.phone,instagram:state.lead.instagram,tipo:'quiz',ts:new Date().toISOString()})}).catch(function(){}); } }catch(e){}
+  
+  try { 
+    if(CAPTURE_ENDPOINT){ 
+      // O 'await' obriga a página a esperar o Make salvar os dados
+      await fetch(CAPTURE_ENDPOINT, {
+        method: 'POST',
+        headers: {'Content-Type': 'application/json'},
+        body: JSON.stringify({
+          email: state.lead.email,
+          first_name: state.lead.first_name,
+          phone: state.lead.phone,
+          instagram: state.lead.instagram,
+          tipo: 'quiz',
+          ts: new Date().toISOString()
+        })
+      }); 
+    } 
+  } catch(e) {
+    // Se a internet falhar, ele ignora o erro para não quebrar a tela
+  }
+  
+  // Após o Make confirmar, a página mostra o resultado do arquétipo
   showResult();
 }
 
