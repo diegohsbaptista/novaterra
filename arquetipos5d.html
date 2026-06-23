@@ -577,7 +577,9 @@ async function submitCapture(){
   
   try { 
     if(CAPTURE_ENDPOINT){ 
-      // O 'await' obriga a página a esperar o Make salvar os dados
+      // Calculando o resultado EXATAMENTE antes de enviar os dados
+      const resultado = resultData();
+
       await fetch(CAPTURE_ENDPOINT, {
         method: 'POST',
         headers: {'Content-Type': 'application/json'},
@@ -587,15 +589,17 @@ async function submitCapture(){
           phone: state.lead.phone,
           instagram: state.lead.instagram,
           tipo: 'quiz',
-          ts: new Date().toISOString()
+          ts: new Date().toISOString(),
+          // 👇 AS NOVAS INFORMAÇÕES QUE VÃO PARA O MAKE 👇
+          arquetipo: resultado.perfil_nome,
+          dimensao: resultado.faixa,
+          mandala: resultado.mandala.join(', ')
         })
       }); 
     } 
   } catch(e) {
-    // Se a internet falhar, ele ignora o erro para não quebrar a tela
   }
   
-  // Após o Make confirmar, a página mostra o resultado do arquétipo
   showResult();
 }
 
