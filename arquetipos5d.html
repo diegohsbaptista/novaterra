@@ -1,0 +1,999 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Mapa de Evolução para Lideranças da Nova Terra</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,500;0,600;1,400;1,500&family=Spectral:ital,wght@0,300;0,400;0,500;0,600;1,400&family=Cinzel:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --ink:#070912; --ink-2:#0d1120; --panel:#10142a;
+    --line:rgba(190,200,255,.10); --line-2:rgba(190,200,255,.20);
+    --text:#e7e9f5; --text-soft:#a9adc8; --text-dim:#6f7398;
+    --c3d:#d98a4a; --c4d:#6fbf73; --c5d:#5b8fd0; --c6d:#9b6fd0; --c7d:#ecdca0;
+    --accent:#e08aa6;
+  }
+  *{box-sizing:border-box;margin:0;padding:0}
+  html{scroll-behavior:smooth}
+  body{background:
+      radial-gradient(120% 80% at 50% -10%, rgba(143,141,224,.12), transparent 55%),
+      radial-gradient(100% 60% at 85% 110%, rgba(224,138,166,.07), transparent 60%),
+      var(--ink);
+    color:var(--text);font-family:'Spectral',Georgia,serif;font-weight:300;line-height:1.6;
+    -webkit-font-smoothing:antialiased;min-height:100vh;overflow-x:hidden;}
+  body::before{content:"";position:fixed;inset:0;pointer-events:none;z-index:1;opacity:.05;
+    background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='140' height='140'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.9' numOctaves='3'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");}
+  .stage{position:relative;z-index:2;max-width:680px;margin:0 auto;padding:0 24px;min-height:100vh;display:flex;flex-direction:column;justify-content:center}
+  .screen{animation:fade .55s ease both}
+  @keyframes fade{from{opacity:0;transform:translateY(14px)}to{opacity:1;transform:none}}
+
+  .eyebrow{font-family:'Cinzel',serif;font-size:10.5px;letter-spacing:.4em;text-transform:uppercase;color:var(--text-dim);margin-bottom:22px}
+  h1{font-family:'Cormorant Garamond',serif;font-weight:500;font-size:clamp(2.4rem,6.5vw,3.8rem);line-height:1.04;letter-spacing:-.5px}
+  h1 em{font-style:italic;color:var(--accent)}
+  .lede{color:var(--text-soft);font-size:1.1rem;margin-top:24px;max-width:560px}
+  .note{margin-top:26px;padding:18px 22px;border:1px solid var(--line);border-radius:12px;background:linear-gradient(180deg,rgba(255,255,255,.02),transparent);font-size:.97rem;color:var(--text-soft)}
+  .note b{color:var(--text);font-weight:500}
+
+  .btn{display:inline-flex;align-items:center;gap:12px;font-family:'Cinzel',serif;font-size:12px;letter-spacing:.18em;text-transform:uppercase;
+    background:linear-gradient(100deg,var(--c4d),var(--c5d));color:#0a0a14;font-weight:600;border:none;border-radius:999px;
+    padding:16px 30px;cursor:pointer;transition:transform .2s ease,box-shadow .2s ease,opacity .2s;box-shadow:0 8px 30px rgba(224,138,166,.18)}
+  .btn:hover{transform:translateY(-2px);box-shadow:0 12px 38px rgba(224,138,166,.28)}
+  .btn[disabled]{opacity:.35;pointer-events:none}
+  .btn.ghost{background:transparent;color:var(--text-soft);border:1px solid var(--line-2);box-shadow:none}
+  .btn.ghost:hover{color:var(--text);border-color:var(--text-dim)}
+  .start-row{margin-top:38px}
+
+  .topbar{position:fixed;top:0;left:0;right:0;z-index:5;padding:18px 24px;display:flex;align-items:center;gap:16px;background:linear-gradient(180deg,var(--ink),transparent)}
+  .prog{flex:1;height:2px;background:var(--line);border-radius:2px;overflow:hidden}
+  .prog i{display:block;height:100%;width:0;background:linear-gradient(90deg,var(--c4d),var(--c5d));transition:width .4s ease}
+  .prog-label{font-family:'Cinzel',serif;font-size:10px;letter-spacing:.2em;color:var(--text-dim);white-space:nowrap}
+  .back{background:none;border:none;color:var(--text-dim);font-family:'Cinzel',serif;font-size:10px;letter-spacing:.2em;text-transform:uppercase;cursor:pointer;padding:4px}
+  .back:hover{color:var(--text-soft)} .back[disabled]{opacity:0;pointer-events:none}
+
+  .qmeta{font-family:'Cinzel',serif;font-size:10px;letter-spacing:.28em;text-transform:uppercase;color:var(--text-dim);margin-bottom:18px;display:flex;align-items:center;gap:12px}
+  .qmeta::before{content:"";width:22px;height:1px;background:var(--line-2)}
+  .qtext{font-family:'Cormorant Garamond',serif;font-weight:500;font-size:clamp(1.55rem,4vw,2.2rem);line-height:1.24;letter-spacing:-.2px}
+  .qtext .pf{font-style:italic;color:var(--accent)}
+
+  /* cards (seleção de perfis) */
+  .cards{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-top:28px}
+  .card{border:1px solid var(--line-2);border-radius:12px;padding:15px 16px;cursor:pointer;transition:all .16s;background:rgba(255,255,255,.02);text-align:left;position:relative}
+  .card:hover{border-color:var(--c5d);transform:translateY(-2px)}
+  .card.sel{border-color:var(--c5d);background:linear-gradient(135deg,rgba(63,156,156,.14),rgba(224,138,166,.14))}
+  .card.sel::after{content:"✦";position:absolute;top:12px;right:13px;color:var(--c5d);font-size:12px}
+  .card .cn{font-family:'Cormorant Garamond',serif;font-size:1.18rem;color:var(--text);line-height:1.1}
+  .card .cd{font-size:.82rem;color:var(--text-dim);margin-top:4px;line-height:1.32}
+  .selbar{margin-top:22px;display:flex;align-items:center;justify-content:space-between;gap:16px}
+  .selcount{font-size:.9rem;color:var(--text-dim)}
+
+  /* choices (cenário / aspiração / porta) */
+  .choices{margin-top:30px;display:flex;flex-direction:column;gap:11px}
+  .choice{text-align:left;border:1px solid var(--line-2);background:rgba(255,255,255,.02);border-radius:12px;padding:17px 20px;cursor:pointer;transition:all .16s;color:var(--text-soft);font-size:1.04rem}
+  .choice:hover{border-color:var(--c5d);transform:translateX(4px);color:var(--text)}
+  .choice.sel{border-color:var(--c5d);background:linear-gradient(100deg,rgba(63,156,156,.12),rgba(224,138,166,.12));color:var(--text)}
+
+  textarea{width:100%;margin-top:28px;min-height:140px;background:rgba(255,255,255,.03);border:1px solid var(--line-2);border-radius:12px;
+    color:var(--text);font-family:'Spectral',serif;font-size:1.05rem;font-weight:300;padding:18px;resize:vertical;line-height:1.5}
+  textarea:focus{outline:none;border-color:var(--c5d)} textarea::placeholder{color:var(--text-dim)}
+  .open-row{margin-top:22px;display:flex;gap:14px;align-items:center}
+
+  /* RESULT */
+  .result{animation:fade .7s ease both;padding:78px 0 70px}
+  .res-eyebrow{font-family:'Cinzel',serif;font-size:11px;letter-spacing:.34em;text-transform:uppercase;color:var(--text-dim);margin-bottom:16px}
+  .res-h{font-family:'Cormorant Garamond',serif;font-weight:500;font-size:clamp(2rem,5.5vw,3.2rem);line-height:1.06;letter-spacing:-.3px}
+  .res-h em{font-style:italic;color:var(--accent)}
+
+  /* a escada do gap */
+  .ladder-wrap{margin:40px 0 8px;padding:30px 26px;border:1px solid var(--line-2);border-radius:16px;
+    background:radial-gradient(120% 120% at 50% 0%,rgba(143,141,224,.08),transparent 60%),var(--ink-2)}
+  .ladder{position:relative;height:330px;margin:8px 0}
+  .rung{position:absolute;left:0;right:0;display:flex;align-items:center;transform:translateY(-50%)}
+  .rung .rl{width:108px;text-align:right;font-family:'Cinzel',serif;font-size:9.5px;letter-spacing:.12em;text-transform:uppercase;color:var(--text-dim);padding-right:16px;line-height:1.2}
+  .rung .rline{flex:1;height:1px;background:var(--line)}
+  .track{position:absolute;left:124px;top:0;bottom:0;width:2px;background:linear-gradient(180deg,var(--c7d),var(--c6d),var(--c5d),var(--c4d),var(--c3d));opacity:.32;border-radius:2px}
+  .gapseg{position:absolute;left:122px;width:6px;border-radius:6px;background:linear-gradient(180deg,var(--c7d),var(--c5d));box-shadow:0 0 22px rgba(224,138,166,.55);animation:pulse 2.6s ease-in-out infinite}
+  @keyframes pulse{0%,100%{opacity:.85}50%{opacity:1}}
+  .marker{position:absolute;left:124px;transform:translateY(-50%);display:flex;align-items:center;gap:11px;white-space:nowrap}
+  .marker .md{width:18px;height:18px;border-radius:50%;margin-left:-9px;border:2px solid var(--ink);flex:none}
+  .marker .ml{font-family:'Cinzel',serif;font-size:9.5px;letter-spacing:.14em;text-transform:uppercase}
+  .marker .ml b{display:block;font-family:'Cormorant Garamond',serif;font-style:italic;font-size:1.02rem;letter-spacing:0;text-transform:none;margin-top:1px}
+  .m-alma .md{background:radial-gradient(circle,#fff,var(--c7d));box-shadow:0 0 16px rgba(236,220,160,.7)}
+  .m-alma .ml{color:var(--c7d)}
+  .m-prat .ml{color:var(--text)}
+
+  .gap-sentence{font-family:'Cormorant Garamond',serif;font-size:clamp(1.3rem,3.4vw,1.7rem);line-height:1.35;margin-top:8px;color:var(--text)}
+  .gap-sentence em{font-style:italic;color:var(--accent)}
+
+  .res-block{margin-top:30px;padding-top:28px;border-top:1px solid var(--line)}
+  .res-block .lbl{font-family:'Cinzel',serif;font-size:10.5px;letter-spacing:.26em;text-transform:uppercase;color:var(--text-dim);margin-bottom:12px}
+  .res-block p{color:var(--text-soft);font-size:1.06rem}
+  .res-block p strong{color:var(--text);font-weight:500}
+  .porta-name{font-family:'Cormorant Garamond',serif;font-size:2rem;color:var(--text)}
+  .porta-name b{color:var(--accent);font-weight:500}
+  .porta-desc{font-style:italic;color:var(--text-soft);font-family:'Cormorant Garamond',serif;font-size:1.18rem;margin-top:4px}
+  .mandala{display:flex;flex-wrap:wrap;gap:12px;margin-top:6px}
+  .gift{border:1px solid var(--line-2);border-radius:10px;padding:12px 16px;flex:1;min-width:200px}
+  .gift .gn{font-family:'Cormorant Garamond',serif;font-size:1.25rem;color:var(--text)}
+  .gift .gd{font-size:.86rem;color:var(--text-dim);margin-top:2px}
+
+  .leapbox{margin-top:30px;padding:28px;border-radius:14px;border:1px solid rgba(224,138,166,.3);background:linear-gradient(100deg,rgba(63,156,156,.10),rgba(224,138,166,.13))}
+  .leapbox .lbl{font-family:'Cinzel',serif;font-size:10.5px;letter-spacing:.24em;text-transform:uppercase;color:var(--c5d);margin-bottom:10px;display:flex;align-items:center;gap:10px}
+  .leapbox .lbl::before{content:"⟶"}
+  .leapbox h3{font-family:'Cormorant Garamond',serif;font-style:italic;font-weight:500;font-size:1.6rem;margin-bottom:12px}
+  .leapbox p{color:var(--text-soft);font-size:1.06rem} .leapbox p.intro{margin-bottom:14px}
+
+  .seed{margin-top:28px;padding:24px 26px;border-radius:12px;border:1px solid var(--line);background:linear-gradient(180deg,rgba(236,220,160,.05),transparent)}
+  .seed .lbl{font-family:'Cinzel',serif;font-size:10.5px;letter-spacing:.24em;text-transform:uppercase;color:var(--c7d);margin-bottom:10px}
+  .seed .echo{font-family:'Cormorant Garamond',serif;font-style:italic;font-size:1.22rem;color:var(--text);line-height:1.4}
+  .seed p{color:var(--text-soft);font-size:1rem;margin-top:12px}
+
+  .cta{margin-top:48px;padding:40px 34px;border-radius:18px;border:1px solid var(--line-2);text-align:center;
+    background:radial-gradient(130% 130% at 50% 0%,rgba(224,138,166,.14),transparent 60%),var(--ink-2)}
+  .cta .k{font-family:'Cinzel',serif;font-size:10.5px;letter-spacing:.3em;text-transform:uppercase;color:var(--text-dim);margin-bottom:16px}
+  .cta h2{font-family:'Cormorant Garamond',serif;font-weight:500;font-size:clamp(1.8rem,4.5vw,2.6rem);line-height:1.1}
+  .cta h2 em{font-style:italic;color:var(--accent)}
+  .cta .sub{color:var(--text-soft);font-size:1.05rem;margin:16px auto 28px;max-width:480px}
+  .cta .incl{display:flex;justify-content:center;gap:26px;flex-wrap:wrap;margin-bottom:30px;font-family:'Cinzel',serif;font-size:11px;letter-spacing:.12em;text-transform:uppercase;color:var(--text-dim)}
+  .cta .incl span{display:flex;align-items:center;gap:8px} .cta .incl span::before{content:"✦";color:var(--c5d)}
+  .restart{margin-top:28px;text-align:center}
+
+  @media(max-width:560px){
+    .cards{grid-template-columns:1fr}
+    .gift{min-width:100%}
+    .marker .ml b{font-size:.92rem}
+    .rung .rl{width:84px;font-size:8.5px}
+    .track,.gapseg{left:100px} .gapseg{left:98px} .marker{left:100px}
+  }
+  .section-intro{color:var(--text-soft);font-size:1.03rem;margin-top:6px;max-width:600px}
+  .aspects{margin-top:16px;display:flex;flex-direction:column;gap:13px}
+  .aspect{border:1px solid var(--line);border-radius:12px;padding:17px 20px;background:linear-gradient(180deg,rgba(255,255,255,.015),transparent)}
+  .aspect .atop{display:flex;justify-content:space-between;align-items:baseline;gap:12px}
+  .aspect .aname{font-family:'Cormorant Garamond',serif;font-size:1.28rem;color:var(--text)}
+  .aspect .aband{font-family:'Cinzel',serif;font-size:9.5px;letter-spacing:.14em;text-transform:uppercase;white-space:nowrap}
+  .mini{display:flex;gap:7px;margin:11px 0 14px}
+  .mini .mdotx{width:9px;height:9px;border-radius:50%;background:var(--line-2)}
+  .arow{display:grid;grid-template-columns:118px 1fr;gap:14px;padding:5px 0;font-size:.96rem;color:var(--text-soft)}
+  .arow .al{font-family:'Cinzel',serif;font-size:9px;letter-spacing:.15em;text-transform:uppercase;color:var(--text-dim);padding-top:3px}
+  .actlist{display:flex;flex-direction:column;gap:10px;margin-top:14px}
+  .actitem{display:flex;gap:14px;align-items:baseline}
+  .actitem .ai{font-family:'Cormorant Garamond',serif;font-size:1.15rem;color:var(--c5d);min-width:30px;font-style:italic}
+  .actitem .at{color:var(--text-soft);font-size:1rem}
+  .actitem .at b{color:var(--text);font-weight:500}
+  .rituals{display:flex;gap:14px;margin-top:16px;flex-wrap:wrap}
+  .ritcard{flex:1;min-width:220px;border:1px solid var(--line-2);border-radius:12px;padding:16px 18px;background:rgba(255,255,255,.02)}
+  .ritcard .rn{font-family:'Cormorant Garamond',serif;font-style:italic;font-size:1.3rem;color:var(--text)}
+  .ritcard .rd{font-size:.9rem;color:var(--text-soft);margin-top:5px;line-height:1.45}
+  .sustain-note{margin-top:20px;padding:20px 22px;border-radius:12px;border:1px solid rgba(224,138,166,.25);background:rgba(224,138,166,.06);color:var(--text-soft);font-size:1.04rem;line-height:1.55}
+  .sustain-note b{color:var(--text);font-weight:500}
+  @media(max-width:560px){ .arow{grid-template-columns:1fr;gap:2px} .ritcard{min-width:100%} }
+  .freq-head{font-family:'Cormorant Garamond',serif;font-size:1.45rem;color:var(--text);margin-bottom:8px}
+  .freq-micro{font-family:'Cinzel',serif;font-size:9.5px;letter-spacing:.2em;text-transform:uppercase;color:var(--text-dim);margin-bottom:16px}
+  .freq-cells{display:grid;grid-template-columns:repeat(3,1fr);gap:18px}
+  .freq-cells .fcell .fl{font-family:'Cinzel',serif;font-size:9px;letter-spacing:.16em;text-transform:uppercase;color:var(--text-dim);margin-bottom:5px}
+  .freq-cells .fcell p{font-size:.93rem;color:var(--text-soft)}
+  @media(max-width:560px){ .freq-cells{grid-template-columns:1fr;gap:14px} }
+  .opd{display:flex;flex-direction:column;gap:15px;margin-top:6px}
+  .opt .ol{font-family:'Cinzel',serif;font-size:9.5px;letter-spacing:.16em;text-transform:uppercase;display:block;margin-bottom:5px}
+  .opt p{font-size:1rem;color:var(--text-soft)}
+  .seed-echo{font-family:'Cormorant Garamond',serif;font-style:italic;font-size:1.22rem;color:var(--text);line-height:1.4;margin-bottom:16px}
+  .res-block p + p{margin-top:11px}
+  .res-block p.mission-activ{margin-top:16px;border-left:2px solid var(--c5d);padding-left:14px;color:var(--text-soft)}
+  .cap-intro{color:var(--text-soft);margin-top:18px;font-size:1.02rem}
+  .teaser{list-style:none;margin:20px 0 26px;display:flex;flex-direction:column;gap:11px}
+  .teaser li{position:relative;padding-left:26px;color:var(--text-soft);font-size:1rem}
+  .teaser li::before{content:"✦";position:absolute;left:0;top:1px;color:var(--c5d)}
+  .teaser li b{color:var(--text);font-weight:500}
+  .capform{display:flex;flex-direction:column;gap:11px;margin-top:6px}
+  .capform input{background:rgba(255,255,255,.03);border:1px solid var(--line-2);border-radius:11px;color:var(--text);font-family:'Spectral',serif;font-size:1.02rem;padding:15px 17px}
+  .capform input:focus{outline:none;border-color:var(--c5d)} .capform input::placeholder{color:var(--text-dim)}
+  .cap-priv{margin-top:14px;font-size:.82rem;color:var(--text-dim)}
+  .savebar{margin-top:34px;text-align:center}
+  .saventa{margin-top:13px;font-size:.9rem;color:var(--text-dim)} .saventa b{color:var(--text-soft)}
+  @media print{
+    html,body{-webkit-print-color-adjust:exact;print-color-adjust:exact}
+    .topbar,.savebar,.restart{display:none!important}
+    .result{padding:6px 0}
+    .ladder-wrap,.aspect,.res-block,.leapbox,.cta{break-inside:avoid}
+    @page{margin:14mm}
+  }
+  .prep{margin-top:26px;padding:22px 24px;border:1px solid var(--line-2);border-radius:14px;background:rgba(255,255,255,.02)}
+  .prep-h{font-family:'Cinzel',serif;font-size:10.5px;letter-spacing:.26em;text-transform:uppercase;color:var(--c5d);margin-bottom:14px}
+  .prep ul{list-style:none;display:flex;flex-direction:column;gap:11px}
+  .prep li{position:relative;padding-left:22px;color:var(--text-soft);font-size:1rem;line-height:1.5}
+  .prep li::before{content:"✦";position:absolute;left:0;top:1px;color:var(--c5d);font-size:11px}
+  .prep li b{color:var(--text);font-weight:500}
+  .arc{display:flex;flex-direction:column;margin-top:8px}
+  .arcrow{padding:14px 0;border-top:1px solid var(--line)}
+  .arcrow:first-child{border-top:none}
+  .arcrow.now{background:linear-gradient(100deg,rgba(63,156,156,.08),rgba(224,138,166,.10));border-radius:12px;padding:18px;border:1px solid var(--line-2);margin:6px 0}
+  .arcdim{font-family:'Cinzel',serif;font-size:10px;letter-spacing:.16em;text-transform:uppercase;margin-bottom:5px}
+  .arctext{color:var(--text-soft);font-size:1.02rem}
+  .arcnow{margin-top:14px;display:flex;flex-direction:column;gap:10px}
+  .arcnow-l{font-family:'Cinzel',serif;font-size:9.5px;letter-spacing:.22em;text-transform:uppercase;color:var(--c5d)}
+  .arcrow2{display:grid;grid-template-columns:140px 1fr;gap:12px;align-items:baseline}
+  .arcrow2 .al{font-family:'Cinzel',serif;font-size:8.5px;letter-spacing:.13em;text-transform:uppercase;color:var(--text-dim)}
+  .arcrow2 span:last-child{color:var(--text-soft);font-size:.98rem}
+  .arcrow2 em{color:var(--accent);font-style:italic}
+  @media(max-width:560px){ .arcrow2{grid-template-columns:1fr;gap:3px} }
+  .synth{display:grid;grid-template-columns:1fr 1fr;gap:18px;margin-top:18px;margin-bottom:6px}
+  .synthcol{border:1px solid var(--line-2);border-radius:12px;padding:16px 18px}
+  .synth-l{font-family:'Cinzel',serif;font-size:9px;letter-spacing:.14em;text-transform:uppercase;color:var(--text-dim);margin-bottom:10px}
+  .synthcol ul{list-style:none;display:flex;flex-direction:column;gap:7px;margin-bottom:10px}
+  .synthcol li{color:var(--text-soft);font-size:.96rem} .synthcol li b{color:var(--text);font-weight:500}
+  .synth-note{font-size:.86rem;color:var(--text-dim)!important}
+  @media(max-width:560px){ .synth{grid-template-columns:1fr} }
+  .phases{display:flex;flex-direction:column;gap:16px;margin-top:8px}
+  .phase{border:1px solid var(--line-2);border-radius:14px;padding:20px 22px}
+  .phh{font-family:'Cormorant Garamond',serif;font-size:1.3rem;color:var(--text);display:flex;align-items:center;gap:12px;margin-bottom:8px}
+  .phn{display:inline-flex;align-items:center;justify-content:center;width:28px;height:28px;border-radius:50%;border:1px solid var(--c5d);color:var(--c5d);font-family:'Cinzel',serif;font-size:11px;flex:none}
+  .phintro{color:var(--text-soft);font-size:1rem;margin-bottom:10px} .phintro em{color:var(--accent);font-style:italic}
+  .plist{list-style:none;display:flex;flex-direction:column;gap:9px}
+  .plist li{position:relative;padding-left:20px;color:var(--text-soft);font-size:1rem;line-height:1.5}
+  .plist li::before{content:"·";position:absolute;left:6px;top:-3px;color:var(--c5d);font-size:1.4rem}
+  .plist li.prio-h{padding-left:0;color:var(--text);font-family:'Cinzel',serif;font-size:9.5px;letter-spacing:.16em;text-transform:uppercase;margin-top:8px}
+  .plist li.prio-h::before{content:""}
+  /* ===== PAINEL DE CONSCIÊNCIA ===== */
+  .chero{display:flex;gap:22px;align-items:center;margin:18px 0 8px;flex-wrap:wrap}
+  .cavatar{flex:none}
+  .cbandinfo{flex:1;min-width:190px}
+  .cbcode{font-family:'Cinzel',serif;font-size:2.4rem;font-weight:600;line-height:1}
+  .cbnm{font-family:'Cormorant Garamond',serif;font-size:1.5rem;color:var(--text);margin-top:2px}
+  .cbest{color:var(--text-soft);font-size:.98rem;margin-top:8px}
+  .cbest b{color:var(--text);font-weight:500}
+  .cbstars{display:flex;flex-direction:column;gap:5px;margin-top:12px}
+  .cbstars span{display:flex;align-items:center;gap:8px;font-size:.8rem;color:var(--text-soft);font-family:'Cinzel',serif;letter-spacing:.03em}
+  .cbstars i{width:9px;height:9px;border-radius:50%;flex:none}
+  .cbstars small{color:var(--text-dim)}
+  .cmetrics{display:grid;grid-template-columns:1fr 1fr;gap:11px;margin-top:18px}
+  .cmetric{border:1px solid var(--line);border-radius:11px;padding:13px 15px;background:linear-gradient(180deg,rgba(255,255,255,.015),transparent)}
+  .cml{font-family:'Cinzel',serif;font-size:8.5px;letter-spacing:.15em;text-transform:uppercase;color:var(--text-dim)}
+  .cmv{font-family:'Cormorant Garamond',serif;font-size:1.1rem;color:var(--text-soft);margin-top:5px;line-height:1.25}
+  .cmv b{color:var(--text);font-weight:600;font-size:1.22rem}
+  .cmv .ms{font-size:.78rem;color:var(--text-dim);font-family:'Spectral',serif}
+  .cbar{height:4px;border-radius:3px;background:rgba(190,200,255,.10);margin-top:9px;overflow:hidden}
+  .cbar i{display:block;height:100%;border-radius:3px}
+  .cradar{display:flex;justify-content:center;margin:22px 0 4px}
+  .cchakras{margin-top:22px}
+  .csub{font-family:'Cinzel',serif;font-size:9.5px;letter-spacing:.2em;text-transform:uppercase;color:var(--text-dim);margin-bottom:13px}
+  .cchk{display:flex;align-items:center;gap:12px;padding:6px 0}
+  .cchk.cstar{background:linear-gradient(90deg,rgba(236,220,160,.05),transparent);border-radius:8px;padding:7px 10px;margin:2px -10px}
+  .ccn{flex:none;width:140px;font-family:'Cormorant Garamond',serif;font-size:1.04rem;color:var(--text);line-height:1.12}
+  .ccn small{display:block;font-family:'Spectral',serif;font-size:.71rem;color:var(--text-dim)}
+  .cchk .cbar{flex:1;margin-top:0;height:6px}
+  .ccpct{flex:none;width:38px;text-align:right;font-family:'Cinzel',serif;font-size:.82rem;color:var(--text-soft)}
+  .cscaleblk{margin-top:26px}
+  .cscale-note{color:var(--text-soft);font-size:.98rem;margin-bottom:14px;max-width:600px}
+  .cscale-note em{font-style:italic;color:var(--accent)}
+  .cscale{border-left:1px solid var(--line-2);margin-left:6px}
+  .csrow{display:flex;align-items:center;gap:11px;padding:3px 0 3px 16px;opacity:.5}
+  .csrow.on{opacity:1}
+  .csdot{width:8px;height:8px;border-radius:50%;background:var(--text-dim);margin-left:-20px;flex:none}
+  .csrow.on .csdot{background:var(--accent);box-shadow:0 0 12px var(--accent);width:11px;height:11px;margin-left:-21px}
+  .csn{font-family:'Cormorant Garamond',serif;font-size:1.08rem;color:var(--text-soft)}
+  .csrow.on .csn{color:var(--text);font-size:1.3rem}
+  .csyou{font-family:'Cinzel',serif;font-size:8.5px;letter-spacing:.18em;text-transform:uppercase;color:var(--accent)}
+  .cfoot{margin-top:20px;padding:14px 16px;border:1px solid var(--line);border-radius:10px;background:rgba(255,255,255,.015);font-size:.83rem;color:var(--text-dim);line-height:1.5}
+  @media(max-width:560px){ .cmetrics{grid-template-columns:1fr} .ccn{width:104px} }
+
+  /* ===== Painel de Consciência (dashboard) ===== */
+  .consc-panel .section-intro{margin-bottom:22px}
+  .dash-hero{display:flex;gap:26px;align-items:center;flex-wrap:wrap;justify-content:center;margin:6px 0 24px}
+  .avatar-wrap{flex:0 0 auto}
+  .hero-side{flex:1;min-width:210px;text-align:center}
+  .band-code{font-family:'Cinzel',serif;font-size:2.5rem;font-weight:700;letter-spacing:.04em;line-height:1}
+  .band-nm{font-family:'Cormorant Garamond',serif;font-style:italic;font-size:1.32rem;color:var(--text);margin-top:2px}
+  .band-est{font-size:.95rem;color:var(--text-soft);margin-top:9px}
+  .band-est b{color:var(--text)}
+  .radar-wrap{display:flex;justify-content:center;margin-top:8px}
+  .metrics{display:grid;grid-template-columns:repeat(2,1fr);gap:12px;margin:6px 0 4px}
+  .metric{background:rgba(190,200,255,.035);border:1px solid var(--line);border-radius:12px;padding:13px 15px}
+  .metric .mhead{font-family:'Cinzel',serif;font-size:9.5px;letter-spacing:.17em;text-transform:uppercase;color:var(--text-dim);margin-bottom:6px}
+  .metric .mval{font-family:'Cormorant Garamond',serif;font-size:1.16rem;color:var(--text);line-height:1.28}
+  .metric .mval b{font-size:1.34rem}
+  .msub{font-size:.82rem;color:var(--text-dim);font-family:'Spectral',serif}
+  .bar{height:5px;border-radius:4px;background:rgba(190,200,255,.10);margin-top:9px;overflow:hidden}
+  .bar i{display:block;height:100%;border-radius:4px}
+  .sub-blk{margin-top:26px}
+  .sbl{font-family:'Cinzel',serif;font-size:10.5px;letter-spacing:.22em;text-transform:uppercase;color:var(--accent);margin-bottom:13px}
+  .chakras{display:flex;flex-direction:column;gap:9px}
+  .chk{display:grid;grid-template-columns:1fr 92px 40px;align-items:center;gap:12px}
+  .chk .cn{font-family:'Cormorant Garamond',serif;font-size:1.1rem;color:var(--text);line-height:1.15}
+  .chk .cn small{display:block;font-family:'Spectral',serif;font-size:.74rem;color:var(--text-dim);font-style:italic}
+  .chk .bar{margin-top:0}
+  .chk .cpct{font-family:'Cinzel',serif;font-size:.82rem;color:var(--text-soft);text-align:right}
+  .scale-intro{color:var(--text-soft);font-size:1rem;margin-bottom:14px}
+  .scale{display:flex;justify-content:center}
+  .scale-track{display:flex;flex-direction:column;width:100%;max-width:330px}
+  .srow{display:flex;align-items:center;gap:10px;padding:5px 2px;opacity:.5;position:relative}
+  .srow .sdot{width:8px;height:8px;border-radius:50%;background:var(--text-dim);flex:0 0 auto}
+  .srow .sn{font-family:'Cormorant Garamond',serif;font-size:1.06rem;color:var(--text-soft)}
+  .srow.on{opacity:1}
+  .srow.on .sdot{background:var(--accent);box-shadow:0 0 10px var(--accent)}
+  .srow.on .sn{color:var(--text);font-weight:600;font-size:1.22rem}
+  .srow .syou{font-family:'Cinzel',serif;font-size:8.5px;letter-spacing:.15em;text-transform:uppercase;color:var(--accent);margin-left:auto}
+  .diag{color:var(--text-soft);font-size:1.05rem;line-height:1.62}
+  .diag strong{color:var(--text)}
+  .foot-note{margin-top:22px;padding-top:16px;border-top:1px solid var(--line);font-family:'Spectral',serif;font-size:.84rem;font-style:italic;color:var(--text-dim);line-height:1.55}
+  @media(max-width:560px){
+    .metrics{grid-template-columns:1fr}
+    .chk{grid-template-columns:1fr 66px 36px;gap:9px}
+    .band-code{font-size:2.1rem}
+  }
+
+</style>
+</head>
+<body>
+
+<div class="topbar" id="topbar" style="display:none">
+  <button class="back" id="backBtn" onclick="goBack()">← Voltar</button>
+  <div class="prog"><i id="progFill"></i></div>
+  <div class="prog-label" id="progLabel"></div>
+</div>
+
+<div class="stage" id="stage"></div>
+
+<script>
+/* ============================================================
+   ► COLE AQUI A URL DA LANDING PAGE DAS ATIVAÇÕES ◄
+   ============================================================ */
+const LP_URL = "#";
+const CAPTURE_ENDPOINT = "https://formspree.io/f/xlgyeqqk"; // ► webhook da automação de email ◄
+
+/* ---------- FAIXAS (altitude 1..5) ---------- */
+const BANDS = {
+  1:{code:'3D', nm:'Estrutura', sub:'Ancorar na Matéria', short:'na Estrutura (3D)', color:'var(--c3d)', hex:'#d98a4a', arq:'O Ancorador',
+     head:'Lidera por controle.', micro:'Escassez · competição · separação · medo',
+     foco:'Escassez, competição, separação, medo.',
+     comp:'Hierarquia rígida, comando e controle, “poder-sobre”. Tenta “reparar o quebrado” e repete padrões.',
+     dec:'Cálculo racional, estratégia linear, lucro imediato.',
+     poder:'Poder-sobre. Mantém para não perder.',
+     dom:'Ancorar na matéria, executar, materializar, dar segurança.',
+     sombra:'Controle, competição, “eu vs. eles”, reduzir tudo ao material.',
+     estado:'Medo, escassez, vergonha.'},
+  2:{code:'4D', nm:'Cura', sub:'Conectar e Sustentar', short:'na Cura (4D)', color:'var(--c4d)', hex:'#6fbf73', arq:'O Curador-Ponte',
+     head:'Lidera pela cura. (Aqui mora a maioria.)', micro:'Ponte entre 3D e 5D · sensibilidade · a ferida',
+     foco:'A ponte arco-íris entre a 3D e a 5D.',
+     comp:'Curador reativo: processa dores e traumas, sustenta o campo emocional — percebe a frequência mas oscila e se exausta.',
+     dec:'Por consenso, cuidado e empatia.',
+     poder:'Começa a soltar o controle; lidera “por baixo”, receoso do próprio dom.',
+     dom:'Empatia, cura, sensibilidade, leitura dos ciclos e do tempo.',
+     sombra:'Bypass espiritual, dificuldade com poder e dinheiro, exaustão empática, cura infinita, sensibilidade sem ancoragem.',
+     estado:'Coragem — o portal da virada.'},
+  3:{code:'5D', nm:'Coração', sub:'Irradiar e Transformar', short:'no Coração (5D)', color:'var(--c5d)', hex:'#5b8fd0', arq:'O Sábio Encarnado',
+     head:'Não convence — irradia.', micro:'A liderança é campo · presença que reorganiza · cocriação',
+     foco:'A liderança não é sobre os outros — é campo.',
+     comp:'Não convence, ressoa; a presença reorganiza o ambiente. Estabiliza o sistema nervoso e a frequência antes de gerir.',
+     dec:'Coração expandido e intuição; sustenta paradoxos sem colapso.',
+     poder:'Poder-com: cocria, não impõe.',
+     dom:'Ser frequência que transforma; manifestar do transbordamento.',
+     sombra:'Superioridade espiritual, desancoragem do físico, bypass.',
+     estado:'Amor, aceitação, abertura.'},
+  4:{code:'6D', nm:'Integração', sub:'Tecer e Ancorar Códigos', short:'na Integração (6D)', color:'var(--c6d)', hex:'#9b6fd0', arq:'O Tecedor de Mundos',
+     head:'Tece redes e ancora códigos.', micro:'Múltiplos planos · padrões na teia viva · grades planetárias',
+     foco:'Opera em múltiplos planos simultaneamente.',
+     comp:'Nó de integração: traduz ciência e espírito, local e global; enxerga padrões ocultos na teia viva antes de se manifestarem.',
+     dec:'Serve ao processo evolutivo, não à organização; lê os padrões antes da forma.',
+     poder:'Poder-através: move sistemas pela estrutura invisível.',
+     dom:'Visão multidimensional, tecer grades planetárias, ancorar códigos de luz.',
+     sombra:'Habitar só o sutil, perder o corpo e o vínculo humano.',
+     estado:'Alegria, êxtase criativo, fluxo.'},
+  5:{code:'7D', nm:'Luz Pura', sub:'Servir e Cocriar', short:'na Luz Pura (7D)', color:'var(--c7d)', hex:'#ecdca0', arq:'O Portal Vivo',
+     head:'A presença já é a ação.', micro:'Ação pura como expressão do campo · sincronicidade · serviço ao Todo',
+     foco:'Ação pura como expressão do campo, sem separação entre líder e visão.',
+     comp:'A presença é ação; opera por sincronicidades — cada gesto responde ao que o Todo precisa agora. Linguagem mítica, poética, paradoxal.',
+     dec:'Por sincronicidade; nenhuma agenda pessoal.',
+     poder:'É canal, não autor; serve ao Todo.',
+     dom:'Ser portal do novo, presença que pacifica, ser o campo.',
+     sombra:'Regredir a uma fusão indiferenciada disfarçada de unidade; desencarnação disfarçada de transcendência; sumir da Terra.',
+     estado:'Paz, serenidade incondicional.'}
+};
+function bandLabel(i){ return BANDS[i].code+' · '+BANDS[i].nm; }
+
+/* ---------- PRÁTICA (cenários — escolha única, opção carrega altitude) ---------- */
+const PRAT = [
+  {k:'s1', asp:'Nas parcerias de trabalho', q:'Quando você se une a outra pessoa ou projeto, o que mais pesa por dentro?', opts:[
+    {t:'Protejo o que é meu; tenho medo de ser passado pra trás.', a:1, bel:'Parceria é risco — preciso me blindar.', lp:'Da defesa à confiança.', pr:'Ofereça primeiro algo de valor a um parceiro, sem cobrar retorno imediato.'},
+    {t:'Quero a parceria, mas me anulo pra evitar atrito e acabo carregando mais.', a:2, bel:'Pra manter a paz, eu me apago.', lp:'Da auto-anulação ao acordo claro.', pr:'Combine papéis, limites e divisão por escrito antes de começar.'},
+    {t:'Busco complementaridade: somamos forças e dividimos com clareza.', a:3, bel:'Você já cocria com maturidade.', lp:'De somar a multiplicar pelo todo.', pr:'Defina com o parceiro um propósito comum maior que os dois interesses.'},
+    {t:'Crio alianças que servem a algo maior do que nós dois.', a:4, bel:'Você tece, não compete.', lp:'Tecer ecossistemas de parceiros.', pr:'Conecte dois parceiros seus que ainda não se conhecem.'}]},
+  {k:'s2', asp:'Na relação com clientes', q:'Na relação com quem você atende ou serve, o que mais te define?', opts:[
+    {t:'Preciso agradar e reter; tenho medo de perder o cliente.', a:1, bel:'Meu valor depende de ser escolhido.', lp:'Do agradar ao servir com verdade.', pr:'Diga um “não” honesto e respeitoso a um cliente esta semana.'},
+    {t:'Me doo demais, ultrapasso limites e me esgoto pra dar conta.', a:2, bel:'Servir bem é não ter limite.', lp:'Da doação sem fim ao cuidado com limite.', pr:'Defina horário e canal de atendimento e comunique com clareza.'},
+    {t:'Sirvo com presença e limite; é uma troca, não uma salvação.', a:3, bel:'Você serve do centro.', lp:'De atender a transformar.', pr:'Numa entrega, foque no que torna o cliente mais autônomo.'},
+    {t:'Formo autonomia; meu sucesso é o cliente não precisar mais de mim.', a:4, bel:'Você liberta, não retém.', lp:'De clientes a multiplicadores.', pr:'Crie um caminho para um cliente virar referência para outros.'}]},
+  {k:'s3', asp:'No envolvimento comunitário', q:'Sobre a sua presença na comunidade ao seu redor:', opts:[
+    {t:'Foco no meu; comunidade me parece distração do que preciso entregar.', a:1, bel:'Comunidade é custo, não força.', lp:'Do isolamento à pertença.', pr:'Participe de um encontro local sem agenda de vender nada.'},
+    {t:'Quero contribuir, mas me sinto sobrecarregado ou de fora.', a:2, bel:'Ou dou conta de tudo, ou não pertenço.', lp:'Da sobrecarga à contribuição justa.', pr:'Ofereça uma única contribuição pequena e concreta à sua comunidade.'},
+    {t:'Contribuo de onde estou, sem precisar liderar tudo.', a:3, bel:'Você pertence sem se perder.', lp:'De participar a nutrir.', pr:'Apresente duas pessoas da sua comunidade que deveriam se conhecer.'},
+    {t:'Ativo e nutro a comunidade; abro espaço pra outros pertencerem.', a:4, bel:'Você cria pertencimento.', lp:'De nutrir a regenerar o tecido.', pr:'Crie um espaço recorrente de encontro para os seus.'}]},
+  {k:'s4', asp:'Na sustentabilidade do seu trabalho', q:'Sobre o impacto social e ambiental do seu trabalho:', opts:[
+    {t:'Não penso muito nisso; primeiro preciso me sustentar.', a:1, bel:'Impacto é luxo de quem já tem o bastante.', lp:'Da sobrevivência à consciência.', pr:'Adote uma prática mais sustentável no seu fazer esta semana.'},
+    {t:'Me preocupo e sinto culpa, mas não sei como agir de fato.', a:2, bel:'Ou sou radical, ou não vale.', lp:'Da culpa à ação possível.', pr:'Liste 3 mudanças pequenas e viáveis e implemente uma.'},
+    {t:'Faço escolhas conscientes no que está ao meu alcance.', a:3, bel:'Você já age com coerência.', lp:'De reduzir dano a gerar bem.', pr:'Inclua um critério social ou ambiental na próxima decisão de trabalho.'},
+    {t:'Desenho o trabalho pra regenerar — devolver mais do que tira.', a:4, bel:'Você regenera, não só sustenta.', lp:'De regenerar o seu a regenerar o entorno.', pr:'Mapeie como o seu trabalho pode devolver valor ao território.'}]},
+  {k:'s5', asp:'Na sua coerência interna', q:'Sobre a coerência entre o que você ensina e o que você vive:', opts:[
+    {t:'Cuido dos outros e do trabalho; de mim, só quando sobra — e raramente sobra.', a:1, bel:'O meu cuidado vem por último.', lp:'Do sacrifício à coerência.', pr:'Agende um tempo inegociável só para a sua prática esta semana.'},
+    {t:'Sei o que precisaria fazer, mas vivo adiando o meu próprio processo.', a:2, bel:'O meu crescimento pode esperar.', lp:'Do adiamento à encarnação.', pr:'Escolha uma prática mínima diária (5 min) e cumpra por 7 dias.'},
+    {t:'Mantenho práticas regulares; sou exemplo vivo do que ofereço.', a:3, bel:'Você encarna o que ensina.', lp:'De praticar a irradiar.', pr:'Compartilhe abertamente uma prática que sustenta o seu trabalho.'},
+    {t:'Meu crescimento interno é a base inseparável do meu trabalho.', a:4, bel:'Você é a própria mensagem.', lp:'De coerência a transmissão silenciosa.', pr:'Inclua silêncio ou retiro regular como parte do método, não como pausa.'}]},
+  {k:'s6', asp:'Na transformação dos seus públicos', q:'Sobre o resultado real do seu trabalho nas pessoas:', opts:[
+    {t:'Foco em entregar e que gostem; o resto não controlo.', a:1, bel:'Meu papel acaba na entrega.', lp:'Do agradar ao transformar.', pr:'Defina, para a próxima entrega, qual mudança real você quer provocar.'},
+    {t:'Quero transformar, mas duvido se gero mudança real ou só alívio momentâneo.', a:2, bel:'Talvez eu só console, não transforme.', lp:'Da dúvida à evidência.', pr:'Pergunte a 3 pessoas o que de fato mudou na vida delas com o seu trabalho.'},
+    {t:'Vejo transformação concreta e sustentável em quem acompanho.', a:3, bel:'Você gera mudança que fica.', lp:'De transformar a emancipar.', pr:'Acompanhe um resultado de longo prazo de alguém que você atendeu.'},
+    {t:'Formo pessoas que transformam outras — o impacto se multiplica sem mim.', a:4, bel:'Você multiplica, não só impacta.', lp:'De impacto a legado vivo.', pr:'Mentore alguém para conduzir o que você faz, ao seu lado.'}]},
+  {k:'s7', asp:'Na escala e no crescimento', q:'Sobre crescer e alcançar mais pessoas:', opts:[
+    {t:'Crescer assusta; prefiro o controle do pequeno e seguro.', a:1, bel:'Crescer é perder o controle.', lp:'Do controle à confiança.', pr:'Dê um passo de expansão pequeno que você vem adiando.'},
+    {t:'Quero crescer, mas travo — medo de me expor ou de perder a essência.', a:2, bel:'Crescer me trai ou me expõe.', lp:'Da trava ao crescimento fiel.', pr:'Nomeie o que é inegociável na sua essência antes de escalar.'},
+    {t:'Cresço sem perder profundidade; a escala serve à missão.', a:3, bel:'Você escala com alma.', lp:'De crescer a multiplicar profundidade.', pr:'Separe o que só você faz do que pode ser feito por outros.'},
+    {t:'Construo estruturas que ampliam o alcance mesmo sem mim no centro.', a:4, bel:'Você escala pela estrutura.', lp:'De escalar a deixar rodar sozinho.', pr:'Documente um processo seu para que outra pessoa possa conduzir.'}]},
+  {k:'s8', asp:'Na criação e moderação de grupos', q:'Quando você reúne pessoas num grupo ou comunidade:', opts:[
+    {t:'Controlo tudo; sem mim no comando, sinto que desanda.', a:1, bel:'Sem o meu controle, o grupo cai.', lp:'Do controle à cultura.', pr:'Delegue uma função de moderação a alguém de confiança.'},
+    {t:'Crio, mas me sobrecarrego moderando e segurando o campo sozinho.', a:2, bel:'Segurar o campo é só meu.', lp:'Da sobrecarga à corresponsabilidade.', pr:'Combine acordos de convivência claros com o grupo.'},
+    {t:'Cultivo cultura e acordos; o grupo se autorregula com a minha presença.', a:3, bel:'Você cultiva, não controla.', lp:'De moderar a empoderar.', pr:'Convide membros a liderarem uma iniciativa dentro do grupo.'},
+    {t:'Formo facilitadores; a comunidade ganha vida própria além de mim.', a:4, bel:'Você gera autonomia coletiva.', lp:'De comunidade a organismo vivo.', pr:'Forme dois facilitadores para conduzir encontros sem você.'}]},
+  {k:'s9', asp:'Na atuação em coletivos e redes', q:'Sobre agir junto com outros em coletivos, movimentos e redes:', opts:[
+    {t:'Prefiro trabalhar sozinho; em grupo me frustro ou disputo espaço.', a:1, bel:'Em rede eu me perco ou disputo.', lp:'Do solo à colaboração.', pr:'Some-se a uma iniciativa coletiva sem precisar liderá-la.'},
+    {t:'Participo, mas me perco entre pertencer e manter a minha voz.', a:2, bel:'Ou pertenço, ou tenho voz.', lp:'Da dissolução à voz na teia.', pr:'Numa ação coletiva, ofereça a sua contribuição singular e nomeie-a.'},
+    {t:'Colaboro mantendo a minha singularidade dentro do coletivo.', a:3, bel:'Você soma sem se diluir.', lp:'De colaborar a articular.', pr:'Proponha uma ponte entre dois grupos que se beneficiariam juntos.'},
+    {t:'Articulo redes; conecto nós e mantenho a circulação entre grupos.', a:4, bel:'Você costura o todo.', lp:'De articular a manter a grade viva.', pr:'Mapeie a sua rede e ative uma conexão que está adormecida.'}]},
+  {k:'s10', asp:'Na dosagem da sua energia', q:'Sobre a sua energia e o seu tempo no trabalho:', opts:[
+    {t:'Dou até esgotar; só paro quando o corpo obriga.', a:1, bel:'Parar é fraqueza ou egoísmo.', lp:'Do esgotamento ao ritmo.', pr:'Bloqueie na agenda um período de recuperação inegociável.'},
+    {t:'Sei que preciso equilibrar, mas a culpa me empurra a dar mais.', a:2, bel:'Se eu não me doer, não vale.', lp:'Da culpa à reciprocidade.', pr:'Antes de aceitar mais um compromisso, pergunte: isto é recíproco?'},
+    {t:'Dou e recebo em reciprocidade; respeito os meus ciclos.', a:3, bel:'Você honra os seus ciclos.', lp:'De equilibrar a fluir.', pr:'Alinhe a sua semana aos seus picos e vales naturais de energia.'},
+    {t:'Minha energia é recurso sagrado; distribuo onde rende mais ao todo.', a:4, bel:'Você cuida da energia como missão.', lp:'De gerir energia a irrigar o campo.', pr:'Realoque a sua energia do que drena para o que mais serve à missão.'}]},
+  {k:'s11', asp:'Na evolução dos seus métodos', q:'Sobre evoluir o que você oferece (métodos, produtos, portfólio):', opts:[
+    {t:'Repito o que funciona; mudar dá trabalho e risco.', a:1, bel:'Mexer no que funciona é perigoso.', lp:'Da repetição à evolução.', pr:'Revise uma oferta sua e melhore um único ponto esta semana.'},
+    {t:'Sei que preciso atualizar, mas me cobro perfeição e travo.', a:2, bel:'Só lanço quando estiver perfeito.', lp:'Da perfeição ao protótipo.', pr:'Lance uma versão imperfeita e melhore com o retorno real.'},
+    {t:'Refino continuamente, com escuta e abertura ao novo.', a:3, bel:'Você evolui com escuta.', lp:'De refinar a reinventar.', pr:'Peça retorno honesto a quem usa o seu trabalho e itere.'},
+    {t:'Prototipo o novo; meu trabalho evolui com a frequência que ancoro.', a:4, bel:'Você cria o que ainda não existe.', lp:'De inovar a abrir caminho.', pr:'Prototipe uma oferta nova alinhada à dimensão que a sua alma já aspira.'}]}
+];
+
+/* ---------- ASPIRAÇÃO (a alma — para onde você aponta) ---------- */
+const ASPIR = [
+  {k:'a1', q:'Imagine a sua melhor versão servindo ao mundo. O que mais te move nessa visão?', opts:[
+    {t:'Garantir minha segurança e a dos meus, primeiro.', a:1},
+    {t:'Acolher e curar quem está em sofrimento.', a:2},
+    {t:'Inspirar pelo exemplo de quem eu me tornei.', a:3},
+    {t:'Cocriar redes e sistemas que regeneram o todo.', a:4},
+    {t:'Ser um canal puro do que a vida pede, sem agenda.', a:5}]},
+  {k:'a2', q:'O que seria, pra você, sinal de ter chegado na sua missão?', opts:[
+    {t:'Estabilidade e reconhecimento pelo que construí.', a:1},
+    {t:'Ter aliviado a dor e curado muita gente.', a:2},
+    {t:'Ver outros florescerem e liderarem sem mim no centro.', a:4},
+    {t:'Ser instrumento de algo maior, sem esperar nada em troca.', a:5}]}
+];
+
+/* ---------- COCRIAÇÃO (projeto / negócio da Nova Terra) ---------- */
+const COCRIA = [
+  {k:'c1', asp:'O estágio do seu projeto', q:'Em que estágio está o projeto, negócio ou obra que é (ou quer ser) o seu veículo de missão?', opts:[
+    {t:'Ainda é só visão — vive na minha cabeça e no meu coração.', a:1, bel:'Falta condição (ou mérito) pra começar de verdade.', lp:'Da visão ao primeiro passo concreto.', pr:'Dê forma a um primeiro fragmento real do projeto esta semana — por menor que seja.'},
+    {t:'Protótipo inicial — testando, ainda instável.', a:2, bel:'Só vale quando estiver pronto e perfeito.', lp:'Do protótipo à oferta viva.', pr:'Coloque o protótipo na frente de 3 pessoas reais e ouça o retorno honesto.'},
+    {t:'Rodando e se sustentando — já vive e me sustenta.', a:3, bel:'Você ancorou a visão na matéria.', lp:'De sustentar a regenerar.', pr:'Identifique um ponto onde o projeto pode devolver mais do que tira.'},
+    {t:'Rodando e regenerando o entorno — vai além de mim.', a:4, bel:'Você cria o que vive mesmo sem você.', lp:'De regenerar a abrir caminho pra outros.', pr:'Documente o modelo para que outra pessoa possa replicá-lo.'}]},
+  {k:'c2', asp:'O seu projeto e a abundância', q:'A relação do seu projeto com o dinheiro e a prosperidade:', opts:[
+    {t:'Sobrevivo no aperto; o dinheiro dita as decisões.', a:1, bel:'Não há o bastante.', lp:'Da escassez ao fluxo.', pr:'Defina um preço justo e digno para a sua entrega central.'},
+    {t:'Sinto culpa de lucrar com algo sagrado.', a:2, bel:'Cobrar pelo dom é impuro.', lp:'Da culpa à troca digna.', pr:'Cobre por uma entrega sem se desculpar nem reduzir o valor.'},
+    {t:'Cobro com tranquilidade e o recurso flui pra missão.', a:3, bel:'Você prospera servindo.', lp:'De prosperar a fazer o recurso circular.', pr:'Reinvista uma parte do que entra de volta na missão.'},
+    {t:'A abundância circula e regenera quem toca o projeto.', a:4, bel:'Você faz a abundância circular.', lp:'De circular a irrigar o ecossistema.', pr:'Crie um mecanismo que faça valor chegar a outros da sua rede.'}]},
+  {k:'c3', asp:'Sozinho ou em aliança', q:'O seu projeto nasce e cresce...', opts:[
+    {t:'Sozinho — eu seguro tudo nas minhas costas.', a:1, bel:'Se não for eu, não sai.', lp:'Do solo à primeira aliança.', pr:'Convide um aliado para dividir uma parte real do projeto.'},
+    {t:'Quero parcerias, mas centralizo e travo em delegar.', a:2, bel:'Delegar é perder o controle ou a essência.', lp:'Do controle à corresponsabilidade.', pr:'Delegue uma função inteira a alguém de confiança, com autonomia real.'},
+    {t:'Em alianças, com papéis e propósito claros.', a:3, bel:'Você cocria com maturidade.', lp:'De aliar a tecer ecossistema.', pr:'Desenhe um propósito comum maior com os seus parceiros.'},
+    {t:'Como ecossistema ou rede que vive além de mim.', a:4, bel:'Você tece um organismo vivo.', lp:'De ecossistema a grade regenerativa.', pr:'Ative uma conexão adormecida entre dois nós da sua rede.'}]},
+  {k:'c4', asp:'O propósito do projeto', q:'No fundo, o seu projeto existe para...', opts:[
+    {t:'Garantir o meu sustento e a minha segurança.', a:1, bel:'Primeiro eu me garanto.', lp:'Da sobrevivência ao serviço.', pr:'Nomeie a quem, além de você, o projeto serve.'},
+    {t:'Ajudar e curar as pessoas que chegam.', a:2, bel:'O meu valor está em resgatar.', lp:'De curar a emancipar.', pr:'Desenhe uma entrega que torne quem você atende mais autônomo.'},
+    {t:'Irradiar e transformar pela frequência que ancoro.', a:3, bel:'Você transforma pela presença.', lp:'De transformar a multiplicar.', pr:'Forme alguém para conduzir parte do que hoje só você faz.'},
+    {t:'Regenerar o todo e servir à Nova Terra.', a:4, bel:'Você serve ao organismo maior.', lp:'De servir a abrir um campo novo.', pr:'Conecte o seu projeto a uma causa coletiva maior que ele.'}]}
+];
+
+/* ---------- PRÁTICAS DE FUNDAÇÃO (por dimensão atual) ---------- */
+const FUND = {
+  1:['Um ritual diário de gratidão pela matéria — reconhecer o que já existe dissolve a lente da escassez.','Nomeie, a cada dia, um lugar onde o controle aparece — e solte conscientemente um único fio.','Treine pedir e receber ajuda sem contrapartida imediata, restaurando a confiança no campo.'],
+  2:['Aterramento diário: pés no chão, respiração no ventre, cinco minutos sentindo o corpo como casa.','Diga um limite por dia — o "não" é a forma madura do amor quando o "sim" te esvazia.','Higiene energética: ao fim de cada atendimento, feche o seu campo e devolva ao outro o que é dele. Você cura melhor sem absorver.'],
+  3:['Rotina terrena como prática: lavar a louça, cuidar das contas e errar em público mantêm a sua luz encarnada.','Cobre pelo seu dom sem culpa — a troca digna é o que faz a frequência circular.','Antes de qualquer projeto, estabilize o seu sistema nervoso: a sua presença regulada já é metade do trabalho.'],
+  4:['Traga a visão para a forma: uma obra concreta por ciclo, mesmo imperfeita, ancora o que você enxerga.','Cultive comunidade que segure o peso de ver longe — você não foi feito para sustentar sozinho.','Volte ao corpo todos os dias: respiração, movimento, prazer. O sutil sem o denso evapora.'],
+  5:['Escolha ficar: comprometa-se com uma forma, um lugar e um vínculo concreto a serviço do Todo.','Cerque-se de parceiros que materializam — almas 3D e 4D que dão chão ao que você canaliza.','Discirna dissolução de iluminação: é o serviço encarnado que separa o portal do escapismo.']
+};
+
+/* ---------- CONSCIÊNCIA · 9 CHAKRAS (Estrela da Alma → Estrela da Terra) ---------- */
+const CHAKRAS = [
+  {k:'estrelaAlma', nm:'Estrela da Alma', hex:'#e8d8ff', tema:'Conexão cósmica, propósito da alma', y:.05, extra:true},
+  {k:'coroa',    nm:'Coroa',         hex:'#9b7ad0', tema:'Conexão com o Todo, propósito', y:.135},
+  {k:'terceiro', nm:'Terceiro Olho', hex:'#6a6ad0', tema:'Visão, intuição, percepção',     y:.18},
+  {k:'garganta', nm:'Garganta',      hex:'#4a8fd0', tema:'Verdade, expressão, voz',         y:.235},
+  {k:'coracao',  nm:'Coração',       hex:'#3f9c9c', tema:'Amor, conexão, coerência cardíaca',y:.35},
+  {k:'plexo',    nm:'Plexo Solar',   hex:'#d9b441', tema:'Poder pessoal, vontade',          y:.44},
+  {k:'sacro',    nm:'Sacro',         hex:'#d98a3d', tema:'Criação, prazer, fluxo',          y:.515},
+  {k:'raiz',     nm:'Raiz',          hex:'#c0563e', tema:'Segurança, pertencimento, matéria',y:.585},
+  {k:'estrelaTerra', nm:'Estrela da Terra', hex:'#cda05a', tema:'Ancoragem no planeta · Ressonância Schumann', y:.94, extra:true}
+];
+const CH_PRAT = {
+  estrelaAlma:'Antes de agir, conecte-se à sua origem antes da forma: em silêncio, pergunte “o que a minha alma veio cocriar?” e apenas escute.',
+  coroa:'Medite em silêncio sem pedir nada — só pertencer. Cinco minutos de entrega ao Todo, diários.',
+  terceiro:'Confie numa intuição por dia, antes de racionalizar. Anote o que veio e o que aconteceu.',
+  garganta:'Diga uma verdade que você vinha guardando — a sua voz ancora a sua frequência no mundo.',
+  coracao:'Prática de coerência cardíaca: respire 5s/5s focando no peito, evocando gratidão por algo real.',
+  plexo:'Tome uma decisão e sustente-a sem buscar aprovação. A soberania nasce de pequenos atos de vontade.',
+  sacro:'Crie algo sem utilidade, só pelo prazer. O fluxo criativo destrava quando solta o “para quê”.',
+  raiz:'Aterramento diário: pés no chão, respiração no ventre, e um ato concreto de cuidado com a sua base material.',
+  estrelaTerra:'Ancore-se no pulso do planeta: pés descalços na terra, respiração lenta, sentindo-se parte do campo vivo da Terra (a Ressonância Schumann, 7,83 Hz).'
+};
+
+/* ---------- ESCALA DE ESTADOS DE CONSCIÊNCIA (inspirada em Hawkins, por aproximação, sem números calibrados) ---------- */
+const ESTADOS = ['Vergonha','Medo','Desejo','Raiva','Orgulho','Coragem','Neutralidade','Aceitação','Amor','Alegria','Paz'];
+
+/* ---------- PERGUNTAS DE CONSCIÊNCIA (corpo, frequência, chakras) ---------- */
+const CONSC = [
+  {k:'estrelaAlma', ch:true, dom:'Estrela da Alma · origem e propósito', q:'Na conexão com a sua origem e o propósito da sua alma:', opts:[
+    {t:'Perdi o fio — não sei a que vim.',a:1},{t:'Sinto um chamado, mas distante e confuso.',a:2},{t:'Conecto em momentos de silêncio.',a:3},{t:'Sei o que vim cocriar e isso me move.',a:4},{t:'Sou canal vivo do propósito da minha alma.',a:5}]},
+  {k:'coroa', ch:true, dom:'Chakra Coroa · conexão com o Todo', q:'Na sua conexão com o Todo e com o sentido da vida:', opts:[
+    {t:'Desconectado, com vazio de sentido.',a:1},{t:'Busco, mas não encontro.',a:2},{t:'Conecto em alguns momentos.',a:3},{t:'Sentido vivo e presente.',a:4},{t:'Unidade — canal aberto com a Fonte.',a:5}]},
+  {k:'terceiro', ch:true, dom:'Chakra Terceiro Olho · visão e intuição', q:'Na sua intuição e percepção:', opts:[
+    {t:'Só confio no racional.',a:1},{t:'Desconfio da minha intuição.',a:2},{t:'Percebo às vezes.',a:3},{t:'Intuição clara e confiável.',a:4},{t:'Visão multidimensional, percepção límpida.',a:5}]},
+  {k:'garganta', ch:true, dom:'Chakra Garganta · verdade e voz', q:'Na sua expressão e na sua verdade:', opts:[
+    {t:'Me silencio, uso máscara.',a:1},{t:'Falo filtrado pelo medo.',a:2},{t:'Expresso parte do que sou.',a:3},{t:'Falo a minha verdade.',a:4},{t:'A voz da alma, plena e clara.',a:5}]},
+  {k:'coracao', ch:true, dom:'Chakra Coração · amor e coerência', q:'Na sua capacidade de amar e se conectar:', opts:[
+    {t:'Fechado, magoado, protegido demais.',a:1},{t:'Abro, mas com muito medo.',a:2},{t:'Me conecto com alguns.',a:3},{t:'Amor que flui com naturalidade.',a:4},{t:'Amor incondicional, coração coerente.',a:5}]},
+  {k:'plexo', ch:true, dom:'Chakra Plexo Solar · poder e vontade', q:'No seu poder pessoal e na sua vontade:', opts:[
+    {t:'Controlo tudo ou me sinto impotente.',a:1},{t:'Oscilo entre forçar e desistir.',a:2},{t:'Ajo, mas duvido de mim.',a:3},{t:'Ação alinhada na maioria das vezes.',a:4},{t:'Soberania serena, sem precisar provar.',a:5}]},
+  {k:'sacro', ch:true, dom:'Chakra Sacro · criação e prazer', q:'Na sua criatividade, prazer e fluxo:', opts:[
+    {t:'Bloqueado, com culpa em sentir prazer.',a:1},{t:'Só crio quando “me permito”.',a:2},{t:'Flui às vezes.',a:3},{t:'Crio com prazer e leveza.',a:4},{t:'Criatividade plena e fluida.',a:5}]},
+  {k:'raiz', ch:true, dom:'Chakra Raiz · segurança e matéria', q:'Na sua relação com segurança material e pertencimento:', opts:[
+    {t:'Medo e aperto constantes — a sobrevivência domina.',a:1},{t:'Insegurança recorrente, oscilando.',a:2},{t:'Uma base razoável, com altos e baixos.',a:3},{t:'Enraizado e seguro na maior parte do tempo.',a:4},{t:'Abundância e presença plena na matéria.',a:5}]},
+  {k:'estrelaTerra', ch:true, dom:'Estrela da Terra · ancoragem no planeta', q:'Na sua ancoragem no corpo e no planeta — o quanto você se sente parte do campo vivo da Terra:', opts:[
+    {t:'Desconectado do corpo e da Terra.',a:1},{t:'Presente no corpo só às vezes.',a:2},{t:'Me aterro quando lembro.',a:3},{t:'Enraizado e em sintonia com a Terra.',a:4},{t:'Pulso em uníssono com o campo do planeta.',a:5}]},
+  {k:'ns1', dom:'Sistema nervoso · reatividade', q:'Quando algo dá errado no seu trabalho, o seu corpo:', opts:[
+    {t:'Dispara — reativo, difícil de acalmar.',a:1},{t:'Fica tenso; remoo por horas.',a:2},{t:'Me regulo com algum esforço.',a:3},{t:'Volto ao centro com rapidez.',a:4},{t:'Permaneço sereno; o campo nem se abala.',a:5}]},
+  {k:'ns2', dom:'Sistema nervoso · linha de base', q:'No seu dia a dia, o seu sistema nervoso vive mais em:', opts:[
+    {t:'Alerta e sobrevivência.',a:1},{t:'Oscilação e exaustão.',a:2},{t:'Funcional, mas acelerado.',a:3},{t:'Regulado na maior parte do tempo.',a:4},{t:'Coerência e presença sustentadas.',a:5}]},
+  {k:'h1', dom:'Coerência cardíaca · centro da decisão', q:'As suas decisões nascem mais de:', opts:[
+    {t:'Cálculo e medo.',a:1},{t:'Obrigação e culpa.',a:2},{t:'Razão, com alguma escuta interna.',a:3},{t:'Coração e intuição.',a:4},{t:'Do campo, sem agenda pessoal.',a:5}]},
+  {k:'h2', dom:'Coerência cardíaca · diante do outro', q:'Diante do sofrimento do outro, você:', opts:[
+    {t:'Absorvo e me esgoto.',a:1},{t:'Me responsabilizo demais.',a:2},{t:'Acolho com algum limite.',a:3},{t:'Sustento sem me perder.',a:4},{t:'Presença que pacifica.',a:5}]},
+  {k:'emo', dom:'Emoção · o seu estado dominante', q:'Sendo honesto, o seu estado emocional mais frequente hoje é:', opts:[
+    {t:'Medo, vergonha ou culpa.',a:1},{t:'Raiva ou frustração.',a:2},{t:'Oscila, neutro.',a:3},{t:'Amor e aceitação.',a:4},{t:'Paz e serenidade.',a:5}]}
+];
+
+/* ---------- ESTADO + FLUXO ---------- */
+const state = { consc:{}, prat:{}, asp:{}, cocria:{}, projeto:'', semente:'', lead:{} };
+let steps = [];
+function shuffle(a){ for(let i=a.length-1;i>0;i--){ const j=Math.floor(Math.random()*(i+1)); [a[i],a[j]]=[a[j],a[i]]; } return a; }
+function buildSteps(){
+  const cons = CONSC.map(q=>({type:'cons', q}));
+  const scen = PRAT.map(q=>({type:'scn', q, opts:shuffle(q.opts.map(o=>({...o})))}));
+  shuffle(scen);
+  const coc = COCRIA.map(q=>({type:'coc', q, opts:shuffle(q.opts.map(o=>({...o})))}));
+  const asp = ASPIR.map(q=>({type:'asp', q, opts:shuffle(q.opts.map(o=>({...o})))}));
+  steps = [ ...cons, ...scen, ...coc, {type:'projeto'}, ...asp, {type:'seed'}, {type:'capture'} ];
+}
+buildSteps();
+let idx = -1;
+
+const stage = document.getElementById('stage');
+const topbar = document.getElementById('topbar');
+
+function render(){
+  if(idx===-1){ renderIntro(); topbar.style.display='none'; return; }
+  topbar.style.display='flex';
+  document.getElementById('progFill').style.width = (idx/steps.length)*100 + '%';
+  document.getElementById('progLabel').textContent = (idx+1)+' / '+steps.length;
+  document.getElementById('backBtn').disabled = (idx===0);
+  const s = steps[idx];
+  if(s.type==='cons') renderConsc(s);
+  else if(s.type==='scn'||s.type==='asp'||s.type==='coc') renderChoice(s);
+  else if(s.type==='projeto') renderProjeto();
+  else if(s.type==='seed') renderSeed();
+  else if(s.type==='capture') renderCapture();
+}
+
+function renderIntro(){
+  stage.innerHTML = `
+  <div class="screen">
+    <div class="eyebrow">Academia de Lideranças da Nova Terra</div>
+    <h1>Mapa de Evolução<br><em>para Lideranças da Nova Terra</em></h1>
+    <p class="lede">Você cruzou a porta. Este não é um teste — é um espelho minucioso e um plano de evolução. Ele revela em que frequência você lidera hoje, em cada dimensão da sua vida e do seu trabalho, e desenha o caminho do seu próximo salto.</p>
+    <div class="prep">
+      <div class="prep-h">Antes de começar — prepare o campo</div>
+      <ul>
+        <li>Esteja <b>sozinho(a)</b>, num lugar <b>silencioso</b> e harmonizado — uma vela, um incenso, o que ajudar a sacralizar este momento.</li>
+        <li>Respire fundo algumas vezes e <b>entre em meditação</b> por um minuto antes de iniciar: aquiete a mente e desça ao coração.</li>
+        <li>Responda com <b>honestidade primordial</b> — sobre como você <b>está hoje</b>, não sobre onde acha que está nem onde gostaria de estar. A sombra só se revela à verdade.</li>
+        <li>Pense sempre na sua <b>atuação no mundo</b>: o seu trabalho, a sua missão, a sua cocriação. Reserve cerca de <b>10 minutos</b>.</li>
+      </ul>
+    </div>
+    <div class="start-row"><button class="btn" onclick="next()">Iniciar o meu mapa</button></div>
+  </div>`;
+}
+
+function renderConsc(s){
+  const cur = state.consc[s.q.k];
+  const opts = s.q.opts.map(o=>`<button class="choice ${cur===o.a?'sel':''}" onclick="pickConsc('${s.q.k}',${o.a})">${o.t}</button>`).join('');
+  stage.innerHTML = `
+  <div class="screen">
+    <div class="qmeta">${s.q.dom}</div>
+    <div class="qtext">${s.q.q}</div>
+    <div class="choices">${opts}</div>
+  </div>`;
+}
+function pickConsc(k,a){
+  state.consc[k]=a;
+  document.querySelectorAll('.choice').forEach(c=>c.classList.remove('sel'));
+  if(event&&event.target) event.target.classList.add('sel');
+  setTimeout(next,200);
+}
+
+function renderChoice(s){
+  const store = (s.type==='scn')?state.prat : (s.type==='coc')?state.cocria : state.asp;
+  const cur = store[s.q.k];
+  const meta = s.type==='scn' ? 'Como você age de verdade' : s.type==='coc' ? 'A sua cocriação' : 'Para onde a sua alma aponta';
+  const full = (s.type==='scn'||s.type==='coc');
+  const opts = s.opts.map((o,i)=>{ const on = full ? (cur===o) : (cur===o.a); return `<button class="choice ${on?'sel':''}" onclick="pickChoice('${s.type}','${s.q.k}',${i})">${o.t}</button>`; }).join('');
+  stage.innerHTML = `
+  <div class="screen">
+    <div class="qmeta">${meta}</div>
+    <div class="qtext">${s.q.q}</div>
+    <div class="choices">${opts}</div>
+  </div>`;
+}
+function pickChoice(type,k,i){
+  const opt = steps[idx].opts[i];
+  if(type==='scn') state.prat[k]=opt;
+  else if(type==='coc') state.cocria[k]=opt;
+  else state.asp[k]=opt.a;
+  document.querySelectorAll('.choice').forEach(c=>c.classList.remove('sel'));
+  event.target.classList.add('sel');
+  setTimeout(next,220);
+}
+
+function renderSeed(){
+  stage.innerHTML = `
+  <div class="screen">
+    <div class="qmeta">A Visão-Semente</div>
+    <div class="qtext">Se o medo e o dinheiro não fossem questão, que futuro você sonha ajudar a <span class="pf">cocriar</span> para a humanidade e o planeta?</div>
+    <textarea id="seedInput" placeholder="Escreva livremente. Não há resposta certa — só a sua verdade.">${state.semente||''}</textarea>
+    <div class="open-row">
+      <button class="btn" onclick="finishSeed()">Revelar meu espelho</button>
+      <button class="btn ghost" onclick="finishSeed(true)">Pular</button>
+    </div>
+  </div>`;
+}
+function finishSeed(skip){ if(!skip){ const el=document.getElementById('seedInput'); state.semente=el?el.value.trim():''; } next(); }
+
+function renderProjeto(){
+  stage.innerHTML = `
+  <div class="screen">
+    <div class="qmeta">A sua cocriação</div>
+    <div class="qtext">Qual é o <span class="pf">projeto, negócio ou obra</span> que é hoje — ou que quer ser — o seu veículo de missão na Nova Terra?</div>
+    <textarea id="projInput" placeholder="Descreva em poucas linhas: o que é, para quem, e o que ele veio cocriar.">${state.projeto||''}</textarea>
+    <div class="open-row">
+      <button class="btn" onclick="finishProj()">Continuar</button>
+      <button class="btn ghost" onclick="finishProj(true)">Ainda não tenho</button>
+    </div>
+  </div>`;
+}
+function finishProj(skip){ if(!skip){ const el=document.getElementById('projInput'); state.projeto=el?el.value.trim():''; } next(); }
+
+function renderCapture(){
+  const L=state.lead||{};
+  stage.innerHTML = `
+  <div class="screen">
+    <div class="qmeta">Seu Mapa está pronto</div>
+    <div class="qtext">Para onde enviamos o seu <span class="pf">Mapa completo</span>?</div>
+    <p class="cap-intro">Seu relatório abre na tela em seguida — e enviamos uma cópia para o seu email, para você guardar e revisitar.</p>
+    <div class="capform">
+      <input id="cf-nome" type="text" placeholder="Seu nome" value="${L.nome||''}" oninput="capValidate()">
+      <input id="cf-email" type="email" placeholder="Seu melhor email" value="${L.email||''}" oninput="capValidate()">
+    </div>
+    <div class="open-row"><button class="btn" id="capBtn" disabled onclick="submitCapture()">Abrir meu Mapa completo →</button></div>
+    <p class="cap-priv">Usamos o seu email apenas para enviar o seu Mapa e o acompanhamento da Academia.</p>
+  </div>`;
+  capValidate();
+}
+function capValidate(){
+  const n=(document.getElementById('cf-nome')||{}).value||'';
+  const e=(document.getElementById('cf-email')||{}).value||'';
+  const ok = n.trim().length>=2 && /^[^@\s]+@[^@\s]+\.[^@\s]+$/.test(e.trim());
+  const b=document.getElementById('capBtn'); if(b) b.disabled=!ok;
+}
+function submitCapture(){
+  state.lead={
+    nome:(document.getElementById('cf-nome').value||'').trim(),
+    email:(document.getElementById('cf-email').value||'').trim()
+  };
+  try{
+    let ps=0,pc=0; PRAT.forEach(function(q){var o=state.prat[q.k]; if(o){ps+=o.a;pc++;}});
+    var pa=bandOf(pc?ps/pc:2), mc=measureConsc();
+    if(CAPTURE_ENDPOINT){ fetch(CAPTURE_ENDPOINT,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(Object.assign({},state.lead,{produto:'Mapa de Evolução',dimensao:BANDS[pa].code,coerencia:mc.coh,estado:ESTADOS[mc.stIdx],projeto:state.projeto||'',semente:state.semente||'',ts:new Date().toISOString()}))}).catch(function(){}); }
+  }catch(e){}
+  showResult();
+}
+
+function next(){ idx++; if(idx>=steps.length){ showResult(); return; } render(); }
+function goBack(){ if(idx>0){ idx--; render(); } else { idx=-1; render(); } }
+
+/* ---------- CÁLCULO ---------- */
+function avg(obj, keys){ let s=0,c=0; keys.forEach(k=>{ if(obj[k]!=null){s+=obj[k];c++;} }); return c?s/c:0; }
+function bandOf(x){ return Math.max(1,Math.min(5,Math.round(x))); }
+function posPct(a){ return ((5-a)/4)*100; }
+
+/* ---------- MEDIÇÃO DE CONSCIÊNCIA ---------- */
+function mean(a){ const v=a.filter(x=>x!=null); return v.length? v.reduce((x,y)=>x+y,0)/v.length : 3; }
+function pct5(a){ return Math.round(((a-1)/4)*100); }
+function clamp(x,a,b){ return Math.max(a,Math.min(b,x)); }
+function measureConsc(){
+  const ch={}; CHAKRAS.forEach(c=>{ ch[c.k]=state.consc[c.k]||3; });
+  const chakraAvg=mean(CHAKRAS.map(c=>ch[c.k]));
+  const ns=mean(['ns1','ns2'].map(k=>state.consc[k]));
+  const heart=mean(['h1','h2','emo'].map(k=>state.consc[k]));
+  const avgC=mean(CONSC.map(q=>state.consc[q.k]));
+  const coh=pct5(avgC), nsP=pct5(ns), heartP=pct5(heart), chakraP=pct5(chakraAvg);
+  const toroidal=Math.round((coh+nsP+heartP)/3);
+  const earthStar=pct5(ch['estrelaTerra']||3), soulStar=pct5(ch['estrelaAlma']||3);
+  const schumann=Math.round((coh+earthStar)/2);
+  const stIdx=clamp(Math.round((coh/100)*(ESTADOS.length-1)),0,ESTADOS.length-1);
+  return { ch, chakraAvg:chakraP, ns:nsP, heart:heartP, coh, toroidal, schumann, earthStar, soulStar, stIdx };
+}
+function nsLabel(p){ return p<25?'Reativo · sobrevivência':p<50?'Oscilante · tenso':p<70?'Funcional · acelerado':p<88?'Regulado':'Coerente · sereno'; }
+function heartLabel(p){ return p<25?'Fechado':p<50?'Protegido':p<70?'Abrindo':p<88?'Centrado':'Coerente · irradiando'; }
+function torLabel(p){ return p<35?'Contraído':p<60?'Em formação':p<82?'Expandindo':'Coerente · expansivo'; }
+
+/* ---------- AVATAR (figura humana · 9 chakras · campo toroidal) ---------- */
+function svgAvatar(m,w){
+  w=w||168; const h=Math.round(w*1.5), cx=w/2;
+  const Yf=f=>+(h*f).toFixed(1), Xf=f=>+(cx+w*f).toFixed(1);
+  const col=m.hex, luz=clamp(m.coh/100,0,1);
+  const headTop=0.085, footY=0.87;
+  const fillTop=Yf(footY)-(Yf(footY)-Yf(headTop))*luz;
+  const body=c=>(
+    `<circle cx="${cx}" cy="${Yf(.155)}" r="${(w*.072).toFixed(1)}" fill="${c}"/>`+
+    `<path d="M${Xf(-.11)},${Yf(.26)} Q${Xf(-.13)},${Yf(.35)} ${Xf(-.07)},${Yf(.47)} L${Xf(-.092)},${Yf(.60)} L${Xf(.092)},${Yf(.60)} L${Xf(.07)},${Yf(.47)} Q${Xf(.13)},${Yf(.35)} ${Xf(.11)},${Yf(.26)} Z" fill="${c}"/>`+
+    `<rect x="${Xf(-.15)}" y="${Yf(.27)}" width="${(w*.034).toFixed(1)}" height="${(h*.30).toFixed(1)}" rx="${(w*.017).toFixed(1)}" fill="${c}"/>`+
+    `<rect x="${Xf(.116)}" y="${Yf(.27)}" width="${(w*.034).toFixed(1)}" height="${(h*.30).toFixed(1)}" rx="${(w*.017).toFixed(1)}" fill="${c}"/>`+
+    `<rect x="${Xf(-.088)}" y="${Yf(.59)}" width="${(w*.064).toFixed(1)}" height="${(h*.28).toFixed(1)}" rx="${(w*.03).toFixed(1)}" fill="${c}"/>`+
+    `<rect x="${Xf(.024)}" y="${Yf(.59)}" width="${(w*.064).toFixed(1)}" height="${(h*.28).toFixed(1)}" rx="${(w*.03).toFixed(1)}" fill="${c}"/>`
+  );
+  const heartY=Yf(.35); let tor=''; const tOp=0.10+(m.toroidal/100)*0.42;
+  [[.42,.40],[.34,.33],[.26,.26]].forEach((rr,i)=>{ tor+=`<ellipse cx="${cx}" cy="${heartY}" rx="${(w*rr[0]).toFixed(1)}" ry="${(h*rr[1]).toFixed(1)}" fill="none" stroke="#3f9c9c" stroke-width="1" opacity="${(tOp*(1-i*0.2)).toFixed(2)}"/>`; });
+  tor+=`<ellipse cx="${cx}" cy="${heartY}" rx="${(w*.46).toFixed(1)}" ry="${(w*.12).toFixed(1)}" fill="none" stroke="#3f9c9c" stroke-width="1" opacity="${(tOp*.7).toFixed(2)}"/>`;
+  const ss=(m.soulStar||0)/100, ssY=Yf(.05);
+  let soul=`<circle cx="${cx}" cy="${ssY}" r="${(w*.05).toFixed(1)}" fill="#e8d8ff" opacity="${(0.10+ss*0.40).toFixed(2)}"/><circle cx="${cx}" cy="${ssY}" r="${(w*.022).toFixed(1)}" fill="#fff" opacity="${(0.3+ss*0.7).toFixed(2)}"/>`;
+  for(let a=0;a<8;a++){ const ang=a*Math.PI/4, rl=w*.072; soul+=`<line x1="${cx}" y1="${ssY}" x2="${(cx+rl*Math.cos(ang)).toFixed(1)}" y2="${(ssY+rl*Math.sin(ang)).toFixed(1)}" stroke="#e8d8ff" stroke-width="0.8" opacity="${(ss*0.5).toFixed(2)}"/>`; }
+  const es=(m.schumann||0)/100, esY=Yf(.905);
+  let earth=`<line x1="${cx}" y1="${Yf(.865)}" x2="${cx}" y2="${esY}" stroke="${col}" stroke-width="1" opacity="${(es*0.4).toFixed(2)}"/>`;
+  [.062,.042,.024].forEach((r,i)=>{ earth+=`<circle cx="${cx}" cy="${esY}" r="${(w*r).toFixed(1)}" fill="none" stroke="#cda05a" stroke-width="1" opacity="${(0.12+es*0.45*(1-i*0.2)).toFixed(2)}"/>`; });
+  earth+=`<circle cx="${cx}" cy="${esY}" r="${(w*.017).toFixed(1)}" fill="#e0b063" opacity="${(0.3+es*0.7).toFixed(2)}"/>`;
+  let dots=''; CHAKRAS.forEach(c=>{ if(c.extra) return; const v=(m.ch[c.k]||1)/5, y=Yf(c.y), r=(w*.018+v*w*.016);
+    dots+=`<circle cx="${cx}" cy="${y}" r="${(r+v*w*.02).toFixed(1)}" fill="${c.hex}" opacity="${(v*0.28).toFixed(2)}"/><circle cx="${cx}" cy="${y}" r="${r.toFixed(1)}" fill="${c.hex}" opacity="${(0.3+v*0.7).toFixed(2)}"/>`; });
+  return `<svg width="${w}" height="${h}" viewBox="0 0 ${w} ${h}" xmlns="http://www.w3.org/2000/svg">
+    <defs><clipPath id="lcA"><rect x="0" y="${fillTop.toFixed(1)}" width="${w}" height="${(Yf(footY)-fillTop).toFixed(1)}"/></clipPath></defs>
+    ${tor}
+    <g opacity=".16">${body('#c9d2ee')}</g>
+    <g clip-path="url(#lcA)">${body(col)}</g>
+    ${dots}${soul}${earth}
+    <text x="${cx}" y="${Yf(.995)}" text-anchor="middle" font-size="10" fill="${col}" font-family="Cinzel,serif" font-weight="600" letter-spacing="1">${m.coh}% LUZ</text>
+  </svg>`;
+}
+/* ---------- RADAR + ANEL ---------- */
+function svgRadar(vals,lbls,hex,sz){
+  sz=sz||230; const cx=sz/2, cy=sz/2-4, r=sz*.32, n=vals.length;
+  const ang=i=>-Math.PI/2+i*2*Math.PI/n, pt=(i,rad)=>({x:cx+rad*Math.cos(ang(i)),y:cy+rad*Math.sin(ang(i))});
+  let grid=''; [.33,.66,1].forEach(ra=>{ const ps=Array.from({length:n},(_,i)=>pt(i,r*ra)); grid+=`<path d="${ps.map((p,i)=>(i?'L':'M')+p.x.toFixed(1)+','+p.y.toFixed(1)).join(' ')}Z" fill="none" stroke="rgba(190,200,255,.12)" stroke-width="0.5"/>`; });
+  let axes=''; for(let i=0;i<n;i++){ const p=pt(i,r); axes+=`<line x1="${cx}" y1="${cy}" x2="${p.x.toFixed(1)}" y2="${p.y.toFixed(1)}" stroke="rgba(190,200,255,.12)" stroke-width="0.5"/>`; }
+  const poly=vals.map((v,i)=>pt(i,r*Math.max(v,0.05)));
+  const path=poly.map((p,i)=>(i?'L':'M')+p.x.toFixed(1)+','+p.y.toFixed(1)).join(' ')+'Z';
+  let labels=''; for(let i=0;i<n;i++){ const p=pt(i,r*1.32), anc=p.x<cx-6?'end':p.x>cx+6?'start':'middle'; labels+=`<text x="${p.x.toFixed(1)}" y="${(p.y+3).toFixed(1)}" text-anchor="${anc}" font-size="8.5" fill="#a9adc8" font-family="Cinzel,serif" letter-spacing="0.5">${lbls[i]}</text>`; }
+  return `<svg width="${sz}" height="${sz}" viewBox="0 0 ${sz} ${sz}" xmlns="http://www.w3.org/2000/svg">${grid}${axes}<path d="${path}" fill="${hex}" fill-opacity=".22" stroke="${hex}" stroke-width="1.5"/>${labels}</svg>`;
+}
+function svgRing(p,col,label,sz){
+  sz=sz||96; const r=sz*.38, st=5, circ=2*Math.PI*r, cx=sz/2, cy=sz/2;
+  return `<svg width="${sz}" height="${sz}" viewBox="0 0 ${sz} ${sz}" xmlns="http://www.w3.org/2000/svg">
+    <circle cx="${cx}" cy="${cy}" r="${r}" fill="none" stroke="rgba(190,200,255,.10)" stroke-width="${st}"/>
+    <circle cx="${cx}" cy="${cy}" r="${r}" fill="none" stroke="${col}" stroke-width="${st}" stroke-dasharray="${(p/100*circ).toFixed(1)} ${circ.toFixed(1)}" stroke-linecap="round" transform="rotate(-90 ${cx} ${cy})"/>
+    <text x="${cx}" y="${cy+1}" text-anchor="middle" font-size="17" font-weight="600" fill="${col}" font-family="Cinzel,serif">${p}</text>
+    <text x="${cx}" y="${cy+15}" text-anchor="middle" font-size="7.5" fill="#6f7398" font-family="Cinzel,serif" letter-spacing="1">${label}</text>
+  </svg>`;
+}
+
+function showResult(){
+  topbar.style.display='none';
+  let ps=0,pc=0; PRAT.forEach(q=>{const o=state.prat[q.k]; if(o){ps+=o.a;pc++;}});
+  const pratAlt = pc?ps/pc:2;
+  const aspirAlt = avg(state.asp, ASPIR.map(q=>q.k)) || 3;
+  const pa=bandOf(pratAlt), as=bandOf(aspirAlt);
+  const gap = aspirAlt - pratAlt;
+  const fb=BANDS[pa];
+  const nextBand = pa<5 ? BANDS[pa+1] : BANDS[5];
+  const potBand = as>pa ? as : Math.min(pa+1,5);
+  const nome = (state.lead&&state.lead.nome)?(', '+state.lead.nome.split(' ')[0]):'';
+
+  /* ===== ESCADA ALMA x PRATICA ===== */
+  let gapH, gapP;
+  if(gap >= 0.75){
+    gapH='A distância é o seu salto.';
+    gapP=`A sua alma sonha servir <em>${BANDS[as].short}</em>, e isso é real. Mas a sua atuação no mundo ainda opera <em>${BANDS[pa].short}</em>. Essa distância não é falha — é exatamente o nome da sua travessia.`;
+  } else if(gap >= 0.25){
+    gapH='Você está quase lá.';
+    gapP=`A sua prática (<em>${BANDS[pa].short}</em>) já se aproxima de onde a sua alma aponta (<em>${BANDS[as].short}</em>). Falta pouco — e o que falta é o salto que você atravessa agora.`;
+  } else if(gap > -0.4){
+    gapH='Alma e prática caminham juntas.';
+    gapP=`Raro: você vive perto do que sonha (<em>${BANDS[pa].short}</em>). O salto agora não é fechar uma distância — é subir as duas juntas, sem regredir e sem se acomodar.`;
+  } else {
+    gapH='Você age além do que ousa sonhar.';
+    gapP=`A sua prática (<em>${BANDS[pa].short}</em>) já está acima do que você se permite querer. O salto aqui é interno: ousar sonhar tão alto quanto você já serve.`;
+  }
+  const tAs=posPct(aspirAlt), tPr=posPct(pratAlt);
+  const segTop=Math.min(tAs,tPr), segH=Math.abs(tPr-tAs);
+  const rungs=[5,4,3,2,1].map(a=>`<div class="rung" style="top:${posPct(a)}%"><div class="rl">${BANDS[a].code} · ${BANDS[a].nm}</div><div class="rline"></div></div>`).join('');
+
+  const freqBlock=`<div class="res-block"><div class="lbl">A sua frequência hoje · ${fb.code} · ${fb.nm} · ${fb.sub}</div><p class="freq-head">${fb.head}</p><div class="freq-micro">${fb.micro}</div><div class="freq-cells"><div class="fcell"><div class="fl">Relação com poder</div><p>${fb.poder}</p></div><div class="fcell"><div class="fl">Dom ativo</div><p>${fb.dom}</p></div><div class="fcell"><div class="fl">Sombra</div><p>${fb.sombra}</p></div></div></div>`;
+
+  /* ===== PAINEL DE CONSCIENCIA ===== */
+  const cm = measureConsc(); cm.hex = fb.hex;
+  let lowCh=CHAKRAS[0], lowChV=99;
+  CHAKRAS.forEach(c=>{ const a=cm.ch[c.k]||3; if(a<lowChV){lowChV=a; lowCh=c;} });
+  const metrics=[
+    {l:'Dimensão de Liderança', v:`<b style="color:${fb.hex}">${fb.code} · ${fb.nm}</b><br><span class="msub">${fb.sub}</span>`},
+    {l:'Índice de Coerência', v:`<b>${cm.coh}</b> / 100`, bar:cm.coh, col:fb.hex},
+    {l:'Estado de Consciência', v:`<b>${ESTADOS[cm.stIdx]}</b><br><span class="msub">escala de Hawkins · por aproximação</span>`},
+    {l:'Sintonia Schumann (7,83 Hz)', v:`<b>${cm.schumann}%</b><br><span class="msub">sintonia com a pulsação do planeta</span>`, bar:cm.schumann, col:'#6fbf73'},
+    {l:'Sistema Nervoso', v:`<b>${nsLabel(cm.ns)}</b>`, bar:cm.ns, col:'#5b8fd0'},
+    {l:'Coerência Cardíaca', v:`<b>${heartLabel(cm.heart)}</b>`, bar:cm.heart, col:'#3f9c9c'},
+    {l:'Campo Toroidal', v:`<b>${torLabel(cm.toroidal)}</b>`, bar:cm.toroidal, col:'#9b6fd0'},
+    {l:'Abertura dos Chakras', v:`<b>${cm.chakraAvg}%</b><br><span class="msub">média dos 9 centros</span>`, bar:cm.chakraAvg, col:'#C9A96E'}
+  ];
+  const metricsHTML=metrics.map(x=>`<div class="metric"><div class="mhead">${x.l}</div><div class="mval">${x.v}</div>${x.bar!=null?`<div class="bar"><i style="width:${x.bar}%;background:${x.col}"></i></div>`:''}</div>`).join('');
+  const radarVals=[cm.coh/100, cm.heart/100, cm.ns/100, cm.toroidal/100, cm.chakraAvg/100, cm.schumann/100];
+  const radarLbls=['Coerência','Coração','Sist.Nervoso','Toroide','Chakras','Schumann'];
+  const chHTML=CHAKRAS.map(c=>{ const a=cm.ch[c.k]||3, p=pct5(a); return `<div class="chk"><div class="cn">${c.nm}<small>${c.tema}</small></div><div class="bar"><i style="width:${p}%;background:${c.hex}"></i></div><div class="cpct">${p}%</div></div>`; }).join('');
+  const scaleHTML=ESTADOS.slice().reverse().map((e,ri)=>{ const i=ESTADOS.length-1-ri, on=i===cm.stIdx; return `<div class="srow ${on?'on':''}"><div class="sdot"></div><div class="sn">${e}</div>${on?'<div class="syou">você está aqui</div>':''}</div>`; }).join('');
+  const diagByBand={
+    1:'A sua frequência hoje se contrai com facilidade — há muito do medo e do controle pesando sobre o campo. Não é fraqueza: é o ponto de partida honesto de quem está pronto para subir.',
+    2:'Você habita o limiar: já sente a frequência mais alta, mas ainda oscila e se exausta. É a travessia 4D→5D acontecendo — o portal da coragem, onde mora a maior parte das lideranças que despertam.',
+    3:'A sua frequência já se sustenta no Coração na maior parte do tempo. Você irradia mais do que convence; o cuidado agora é encarnar e não desancorar.',
+    4:'Você tece em múltiplos planos e move sistemas pela estrutura invisível. O cuidado é não perder o corpo e o vínculo humano enquanto habita o sutil.',
+    5:'Você opera num campo amplo e coerente, a serviço do Todo. O trabalho aqui é permanência: manter os pés na Terra e não desencarnar disfarçado de transcendência.'
+  };
+  const conscBlock = `
+  <div class="res-block consc-panel">
+    <div class="lbl">O seu Painel de Consciência</div>
+    <p class="section-intro">Um retrato vivo da frequência com que você lidera hoje — o seu corpo de luz, os seus centros energéticos e a coerência do seu campo. O avatar se acende conforme a sua coerência; ao redor do coração pulsa o campo toroidal; abaixo dos pés, a Estrela da Terra sintoniza com a Ressonância Schumann do planeta; acima da cabeça, a Estrela da Alma guarda a sua origem.</p>
+    <div class="dash-hero">
+      <div class="avatar-wrap">${svgAvatar(cm,168)}</div>
+      <div class="hero-side">
+        <div class="band-code" style="color:${fb.hex}">${fb.code}</div>
+        <div class="band-nm">${fb.nm} — ${fb.sub}</div>
+        <div class="band-est">Estado dominante: <b>${fb.estado}</b></div>
+        <div class="radar-wrap">${svgRadar(radarVals,radarLbls,fb.hex,210)}</div>
+      </div>
+    </div>
+    <div class="metrics">${metricsHTML}</div>
+    <div class="sub-blk">
+      <div class="sbl">Os seus 9 centros · da Estrela da Terra à Estrela da Alma</div>
+      <div class="chakras">${chHTML}</div>
+    </div>
+    <div class="sub-blk">
+      <div class="sbl">Escala de Estados de Consciência</div>
+      <p class="scale-intro">Uma leitura aproximada do seu estado dominante, inspirada na escala de estados de consciência de David Hawkins e mapeada a partir das suas respostas — sem os valores numéricos calibrados, apenas a sequência viva de estados. A <em>Coragem</em> é o portal — a virada do medo para o amor.</p>
+      <div class="scale"><div class="scale-track">${scaleHTML}</div></div>
+    </div>
+    <div class="sub-blk">
+      <div class="sbl">Diagnóstico do campo</div>
+      <p class="diag">${diagByBand[pa]} A sua coerência hoje está em <strong>${cm.coh}/100</strong>, com o sistema nervoso <strong>${nsLabel(cm.ns).toLowerCase()}</strong> e o coração <strong>${heartLabel(cm.heart).toLowerCase()}</strong>. O seu campo toroidal está <strong>${torLabel(cm.toroidal).toLowerCase()}</strong>, e o centro que mais pede atenção é o <strong>${lowCh.nm}</strong>.</p>
+    </div>
+    <div class="foot-note">As medições deste painel são aproximações a partir das suas respostas — um instrumento de autoconhecimento e acompanhamento, não uma leitura de sensores físicos. A Ressonância Schumann (7,83 Hz) é a pulsação real do planeta com a qual a sua coerência se sintoniza; a coerência cardíaca pode ser medida fisicamente com um monitor de HRV.</div>
+  </div>`;
+
+  /* ===== PAPEIS POR AREA (3D->7D) ===== */
+  const aspectsHTML = PRAT.map(sc=>{
+    const o=state.prat[sc.k]; if(!o) return '';
+    const b=bandOf(o.a);
+    const dots=[1,2,3,4,5].map(i=>`<span class="mdotx" style="${i===b?`background:${BANDS[i].color};box-shadow:0 0 9px ${BANDS[i].color}`:''}"></span>`).join('');
+    return `<div class="aspect"><div class="atop"><span class="aname">${sc.asp}</span><span class="aband" style="color:${BANDS[b].color}">${bandLabel(b)}</span></div><div class="mini">${dots}</div><div class="arow"><span class="al">Crença oculta</span><span>${o.bel}</span></div><div class="arow"><span class="al">Próximo salto</span><span>${o.lp}</span></div><div class="arow"><span class="al">Prática essencial</span><span>${o.pr}</span></div></div>`;
+  }).join('');
+
+  /* ===== COCRIACAO ===== */
+  let ccs=0,ccc=0; COCRIA.forEach(q=>{const o=state.cocria[q.k]; if(o){ccs+=o.a;ccc++;}});
+  let cocriaBlock='';
+  if(ccc || state.projeto){
+    const cAlt=ccc?ccs/ccc:2, cb=bandOf(cAlt);
+    let cItems='';
+    COCRIA.forEach(sc=>{ const o=state.cocria[sc.k]; if(!o) return; const b=bandOf(o.a);
+      cItems+=`<div class="aspect"><div class="atop"><span class="aname">${sc.asp}</span><span class="aband" style="color:${BANDS[b].color}">${bandLabel(b)}</span></div><div class="arow"><span class="al">Crença oculta</span><span>${o.bel}</span></div><div class="arow"><span class="al">Próximo salto</span><span>${o.lp}</span></div><div class="arow"><span class="al">Prática essencial</span><span>${o.pr}</span></div></div>`; });
+    const projEcho = state.projeto?`<p class="seed-echo">“${escapeHTML(state.projeto)}”</p>`:'';
+    let read;
+    if(ccc){
+      const tail = cb<3?'O seu veículo de missão ainda pede ancoragem e coragem para encarnar na matéria.':(cb===3?'O seu veículo já irradia; o próximo passo é fazê-lo regenerar, não apenas sustentar.':'O seu projeto já tece o coletivo — o cuidado é mantê-lo encarnado e vivo além de você.');
+      read=`<p>A sua cocriação opera hoje, no conjunto, <strong>${bandLabel(cb)} · ${BANDS[cb].sub}</strong>. ${BANDS[cb].head} ${tail}</p>`;
+    } else { read='<p>Ainda sem um veículo definido — e tudo bem. O primeiro movimento é dar forma concreta, por menor que seja, ao que a sua alma quer cocriar.</p>'; }
+    cocriaBlock=`<div class="res-block"><div class="lbl">A sua cocriação na Nova Terra · projeto e prosperidade</div>${projEcho}${read}${cItems?`<div class="aspects" style="margin-top:18px">${cItems}</div>`:''}</div>`;
+  }
+
+  /* ===== SINTESE ===== */
+  const aspArr=[];
+  PRAT.forEach(sc=>{const o=state.prat[sc.k]; if(o) aspArr.push({asp:sc.asp,b:bandOf(o.a),pr:o.pr});});
+  const aspSorted=aspArr.slice().sort((x,y)=>x.b-y.b);
+  const aspLow=aspSorted.slice(0,2), aspHigh=aspSorted.slice(-2).reverse();
+  let synthHTML='';
+  if(aspArr.length>=3){
+    const lowList=aspLow.map(x=>`<li><b>${x.asp}</b> — ${bandLabel(x.b)}</li>`).join('');
+    const highList=aspHigh.map(x=>`<li><b>${x.asp}</b> — ${bandLabel(x.b)}</li>`).join('');
+    synthHTML=`<div class="synth"><div class="synthcol"><div class="synth-l">Onde a sua frequência mais se contrai hoje</div><ul>${lowList}</ul><p class="synth-note">Aqui mora o seu maior salto — e por onde o seu Plano de Evolução começa.</p></div><div class="synthcol"><div class="synth-l">Onde ela já se eleva</div><ul>${highList}</ul><p class="synth-note">As suas forças — o chão firme de onde você sustenta a travessia.</p></div></div>`;
+  }
+
+  /* ===== PLANO DE EVOLUCAO ===== */
+  const params=[
+    {nm:'Sistema Nervoso', p:cm.ns, pr:'Regulação diária: respiração 4-7-8 (inspira 4, segura 7, expira 8) ao acordar e antes de cada tarefa densa. O sistema nervoso regulado é a base de toda frequência.'},
+    {nm:'Coerência Cardíaca', p:cm.heart, pr:'Coerência cardíaca: 5 minutos respirando 5s para dentro e 5s para fora, foco no centro do peito, evocando gratidão por algo real. (Para medir fisicamente, use um monitor de HRV.)'},
+    {nm:'Campo Toroidal', p:cm.toroidal, pr:'Ao respirar, visualize a luz circulando do coração para cima, ao redor e de volta — fechando o seu campo. Coerência, coração e sistema nervoso regulado expandem o toroide.'}
+  ];
+  const lowParam = params.slice().sort((a,b)=>a.p-b.p)[0];
+  const fundList=(FUND[pa]||[]).map(p=>`<li>${p}</li>`).join('')+`<li><b>${lowParam.nm} (o mais contraído):</b> ${lowParam.pr}</li>`+`<li><b>Centro ${lowCh.nm}:</b> ${CH_PRAT[lowCh.k]}</li>`;
+  const prioList=aspLow.map(x=>`<li><b>${x.asp}:</b> ${x.pr}</li>`).join('');
+  const planoBlock=`<div class="res-block"><div class="lbl">O seu Plano de Evolução · de ${fb.code} para ${nextBand.code}</div><p class="section-intro">Não é um salto único, mas um caminho em três movimentos. Comece pela Fundação — é ela que faz o seu índice de coerência subir e se sustentar.</p><div class="phases"><div class="phase"><div class="phh"><span class="phn">I</span> Fundação · regular e ancorar</div><p class="phintro">Estabilize a sua frequência atual (${bandLabel(pa)}) e integre a sua sombra antes de subir:</p><ul class="plist">${fundList}</ul></div><div class="phase"><div class="phh"><span class="phn">II</span> A Travessia · o salto para ${nextBand.code} ${nextBand.nm}</div><ul class="plist"><li>O movimento que se abre: de <b>${fb.dom.toLowerCase()}</b> para <b>${nextBand.dom.toLowerCase()}</b>.</li><li>Todos os dias, antes de servir, pergunte ao corpo: "de que frequência eu quero liderar agora?" — e respire até senti-la.</li><li>Integre a sombra desta altitude: ${fb.sombra.toLowerCase()}</li>${prioList?`<li class="prio-h">Prioridades · as áreas mais contraídas</li>${prioList}`:''}</ul></div><div class="phase"><div class="phh"><span class="phn">III</span> Sustentação · não regredir</div><ul class="plist"><li>Cultive um campo de pares — pertencer a uma grade de iguais sustenta a frequência quando o mundo puxa para baixo.</li><li>Pratique a coerência cardíaca diariamente: é o seu termostato de frequência.</li><li>Refaça este mapa a cada 30 dias e observe o seu Índice de Coerência subir. O que se mede, se sustenta.</li></ul></div></div></div>`;
+
+  /* ===== MISSAO ===== */
+  const potName=BANDS[potBand].code+' · '+BANDS[potBand].nm;
+  let missionBlock=`<div class="res-block"><div class="lbl">O caminho da sua missão · liderança na Nova Terra</div>`;
+  if(state.semente){ missionBlock+=`<p class="seed-echo">“${escapeHTML(state.semente)}”</p>`; }
+  missionBlock+=`<p><strong>A sua alma aponta para ${bandLabel(as)}.</strong> No seu potencial, a sua liderança floresce em <b style="color:${BANDS[potBand].color}">${potName}</b> — ${BANDS[potBand].dom.toLowerCase()}.</p><p>O caminho até lá é a travessia que este mapa revela: ancorar onde você está, atravessar o salto de ${fb.code} para ${nextBand.code}, e sustentar a nova frequência para que ela não regrida.</p><p class="mission-activ">Este é o mapa que vamos percorrer, passo a passo, nas Ativações — onde a sua missão deixa de ser visão e vira frequência ancorada no corpo, dimensão a dimensão.</p></div>`;
+
+  stage.innerHTML = `
+  <div class="result">
+    <div class="res-eyebrow">O seu Mapa de Evolução${nome}</div>
+    <div class="res-h">${gapH}</div>
+    <div class="ladder-wrap"><div class="ladder">${rungs}<div class="track"></div>${segH>1?`<div class="gapseg" style="top:${segTop}%;height:${segH}%"></div>`:''}<div class="marker m-alma" style="top:${tAs}%"><span class="md"></span><span class="ml">A sua alma sonha<b>${bandLabel(as)}</b></span></div><div class="marker m-prat" style="top:${tPr}%"><span class="md" style="background:${BANDS[pa].color};box-shadow:0 0 14px ${BANDS[pa].color}88"></span><span class="ml">A sua prática hoje<b>${bandLabel(pa)}</b></span></div></div></div>
+    <p class="gap-sentence">${gapP}</p>
+    ${freqBlock}
+    ${conscBlock}
+    <div class="res-block"><div class="lbl">O seu mapa por aspectos · da Estrutura à Luz Pura</div><p class="section-intro">Você não vibra numa frequência só. Veja onde a sua atuação se acende em cada aspecto do seu fazer — a crença que te segura, o próximo salto e uma prática essencial para começar a subir hoje.</p>${synthHTML}<div class="aspects">${aspectsHTML}</div></div>
+    ${cocriaBlock}
+    ${planoBlock}
+    ${missionBlock}
+    <div class="cta"><div class="k">O próximo passo</div><h2>Pronto para a<br><em>Jornada de Ativação?</em></h2><p class="sub">Quando lançarmos a Jornada, você será um(a) dos(as) primeiros(as) a receber o convite.</p><button class="btn" onclick="capturarWaitlist()" style="margin-top:8px;">Sim, quero receber o convite</button></div>
+    <div class="savebar"><button class="btn ghost" onclick="window.print()">⤓ Salvar em PDF</button>${state.lead&&state.lead.email?`<p class="saventa">Enviamos uma cópia deste relatório e o convite para as Ativações para <b>${state.lead.email}</b>.</p>`:''}</div>
+    <div class="restart"><button class="back" onclick="restart()">↺ Refazer o meu mapa</button></div>
+  </div>`;
+  window.scrollTo(0,0);
+}
+
+function cap(s){ return s.charAt(0).toUpperCase()+s.slice(1); }
+function escapeHTML(s){ return s.replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c])); }
+function restart(){ state.consc={}; state.prat={}; state.asp={}; state.cocria={}; state.projeto=''; state.semente=''; buildSteps(); idx=-1; render(); }
+
+function capturarWaitlist(){
+  const email = state.lead?.email || '';
+  const nome = state.lead?.first_name || 'Líder';
+  const phone = state.lead?.phone || '';
+  const instagram = state.lead?.instagram || '';
+  
+  if(!email){ alert('❌ Email não foi capturado. Tente novamente.'); return; }
+  
+  // envia pro Make
+  try{
+    if(CAPTURE_ENDPOINT){
+      fetch(CAPTURE_ENDPOINT, {
+        method: 'POST',
+        headers: {'Content-Type': 'application/json'},
+        body: JSON.stringify({
+          email: email,
+          first_name: nome,
+          phone: phone,
+          instagram: instagram,
+          tipo: 'mapa',
+          ts: new Date().toISOString()
+        })
+      }).catch(function(){});
+    }
+  }catch(e){}
+  
+  // mostra mensagem
+  alert('✅ Perfeito, '+nome+'!\n\nSeu email foi registrado na lista de espera.\n\nVocê será um(a) dos(as) primeiros(as) a receber o convite quando a Jornada de Ativação for lançada.');
+}
+
+render();
+</script>
+</body>
+</html>
