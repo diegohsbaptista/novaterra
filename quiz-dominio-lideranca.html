@@ -1,0 +1,406 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Qual é o seu Ponto na Matriz da Liderança? — Academia de Lideranças da Nova Terra</title>
+<link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;600;700&family=Cormorant+Garamond:ital,wght@0,400;0,500;0,600;1,400&family=Spectral:wght@300;400;500&display=swap" rel="stylesheet">
+<style>
+:root{
+  --bg:#070812; --bg2:#10142a; --gold:#b8862f; --warm:#fbf8f1;
+  --c3d:#a85c32; --c4d:#b8763f; --c5d:#c99a4a; --c6d:#d9b869; --c7d:#ecdca0;
+  --line:rgba(184,134,47,0.35);
+}
+*{box-sizing:border-box;}
+body{margin:0; min-height:100vh; background:radial-gradient(ellipse at top,var(--bg2),var(--bg) 75%); color:var(--warm); font-family:'Cormorant Garamond',serif; font-size:19px; line-height:1.6; display:flex; justify-content:center; padding:40px 20px;}
+.wrap{max-width:640px; width:100%;}
+h1,h2,h3{font-family:'Cinzel',serif; font-weight:600; color:var(--c7d); letter-spacing:0.02em;}
+h1{font-size:1.9em; text-align:center; margin:0 0 10px;}
+h2{font-size:1.5em; margin:0 0 16px;}
+.eyebrow{font-family:'Spectral',serif; text-transform:uppercase; letter-spacing:0.25em; font-size:0.7em; color:var(--gold); text-align:center; display:block; margin-bottom:16px;}
+p{opacity:0.92;}
+.screen{display:none; animation:fade .4s ease;}
+.screen.active{display:block;}
+@keyframes fade{from{opacity:0; transform:translateY(6px)} to{opacity:1; transform:translateY(0)}}
+.card{background:rgba(184,134,47,0.06); border:1px solid var(--line); border-radius:14px; padding:32px 28px; margin-top:20px;}
+.progress{height:4px; background:rgba(184,134,47,0.15); border-radius:2px; margin-bottom:28px; overflow:hidden;}
+.progress-bar{height:100%; background:linear-gradient(90deg,var(--c3d),var(--c7d)); border-radius:2px; transition:width .4s ease;}
+.q-label{font-family:'Spectral',serif; text-transform:uppercase; letter-spacing:0.15em; font-size:0.7em; color:var(--c5d); margin-bottom:10px;}
+.q-text{font-size:1.3em; margin-bottom:22px; color:var(--warm);}
+.opt{display:block; width:100%; text-align:left; background:rgba(251,248,241,0.02); border:1px solid var(--line); border-radius:10px; padding:16px 18px; margin-bottom:12px; color:var(--warm); font-family:'Cormorant Garamond',serif; font-size:1.02em; cursor:pointer; transition:all .2s;}
+.opt:hover{background:rgba(184,134,47,0.12); border-color:var(--gold);}
+.btn{display:inline-block; background:var(--gold); color:var(--bg); font-family:'Cinzel',serif; font-weight:600; font-size:0.9em; letter-spacing:0.05em; border:none; border-radius:8px; padding:16px 32px; cursor:pointer; margin-top:10px;}
+.btn:hover{background:var(--c7d);}
+.center{text-align:center;}
+.result-tag{font-family:'Spectral',serif; text-transform:uppercase; letter-spacing:0.2em; font-size:0.75em; color:var(--gold); text-align:center; display:block; margin-bottom:6px;}
+.result-name{font-family:'Cinzel',serif; font-weight:700; font-size:2.1em; text-align:center; color:var(--c7d); margin:0 0 20px;}
+.result-triad{font-family:'Spectral',serif; font-style:italic; color:var(--c6d); text-align:center; margin-bottom:24px;}
+.trap{border-left:2px solid var(--gold); padding-left:16px; margin:18px 0;}
+.trap h4{font-family:'Cinzel',serif; color:var(--gold); font-size:0.95em; margin-bottom:4px;}
+.cta{border:1.5px solid var(--gold); border-radius:12px; padding:20px 24px; margin-top:24px; text-align:center;}
+.cta a{color:var(--c7d); text-decoration:none; font-family:'Cinzel',serif; font-weight:600;}
+.restart{text-align:center; margin-top:16px; font-size:0.85em;}
+.restart a{color:var(--c5d); cursor:pointer; text-decoration:underline;}
+.field{display:block; width:100%; background:rgba(251,248,241,0.03); border:1px solid var(--line); border-radius:8px; padding:14px 16px; margin-bottom:14px; color:var(--warm); font-family:'Cormorant Garamond',serif; font-size:1em;}
+.field::placeholder{color:var(--c5d); opacity:0.7;}
+.field:focus{outline:none; border-color:var(--gold);}
+.fullmatrix{width:100%; border-collapse:collapse; margin:18px 0; font-size:10px;}
+.fullmatrix th,.fullmatrix td{border:1px solid var(--line); padding:5px 4px; text-align:center; vertical-align:middle; line-height:1.25;}
+.fullmatrix th{font-family:'Cinzel',serif; color:var(--c7d); font-size:1.1em; background:rgba(184,134,47,0.08);}
+.fullmatrix td.rowlabel{font-family:'Cinzel',serif; color:var(--gold); font-weight:600; text-align:left; font-size:1.05em;}
+.fullmatrix td.hit{border-color:var(--gold); border-width:2px; background:rgba(184,134,47,0.22); color:var(--c7d); font-weight:600;}
+.fullmatrix td.hit-secondary{border-color:var(--gold); border-width:1.5px; color:var(--c6d);}
+.matrix-legend{font-family:'Spectral',serif; font-size:0.7em; color:var(--c5d); font-style:italic; margin-top:6px; text-align:center;}
+.cta-row{display:flex; gap:10px; flex-wrap:wrap; justify-content:center; margin-top:6px;}
+.cta-row a{flex:1; min-width:180px; display:block; text-align:center; background:var(--gold); color:var(--bg); font-family:'Cinzel',serif; font-weight:600; font-size:0.85em; border-radius:8px; padding:14px 10px; text-decoration:none;}
+.cta-row a.secondary{background:transparent; border:1.5px solid var(--gold); color:var(--c7d);}
+</style>
+</head>
+<body>
+<div class="wrap">
+
+<div id="screen-intro" class="screen active">
+  <span class="eyebrow">Academia de Lideranças da Nova Terra</span>
+  <p style="text-align:center; font-size:10px; color:var(--line); margin:-10px 0 4px;">build v6 — faixa por domínio</p>
+  <h1>Qual é o seu Ponto na Matriz da Liderança?</h1>
+  <div class="card center">
+    <p>Você já curou. Já buscou. Já está servindo. Mas onde, exatamente, a sua liderança quer se ancorar agora — e em que frequência ela já opera?</p>
+    <p>Este quiz cruza as duas coisas: qual dos cinco domínios (<strong>Si, Relações, Grupos, Mundo, Planeta</strong>) é o seu ponto de força, e em qual faixa da escala (<strong>3D a 7D</strong>) você já lidera nele. No fim, você recebe a sua célula exata na Matriz Multidimensional. Leva cerca de 5 minutos, em duas partes curtas.</p>
+    <button class="btn" onclick="goTo('q1')">Começar</button>
+  </div>
+</div>
+
+<div id="screen-q" class="screen">
+  <div class="progress"><div class="progress-bar" id="progressBar" style="width:12.5%"></div></div>
+  <div id="questionHost"></div>
+</div>
+
+<div id="screen-transition" class="screen">
+  <div class="card center">
+    <span class="eyebrow">Parte 1 concluída</span>
+    <h2 style="text-align:center">Agora, sua faixa em cada domínio</h2>
+    <p>Você já revelou o seu domínio principal. Faltam mais 5 perguntas curtas — uma pra cada domínio (Si, Relações, Grupos, Mundo, Planeta) — pra descobrir em qual faixa, de 3D a 7D, você já lidera em cada um deles.</p>
+    <button class="btn" onclick="startPartB()">Continuar</button>
+  </div>
+</div>
+
+<div id="screen-capture" class="screen">
+  <div class="card">
+    <span class="eyebrow">Última etapa</span>
+    <h2 style="text-align:center">Pra onde enviamos seu resultado?</h2>
+    <p style="text-align:center">Preencha pra ver sua célula exata na Matriz — domínio e faixa dimensional.</p>
+    <form id="captureForm" onsubmit="submitCapture(event)">
+      <input class="field" type="text" id="capNome" placeholder="Seu nome">
+      <input class="field" type="text" id="capEmail" placeholder="Seu melhor e-mail">
+      <input class="field" type="text" id="capWhatsapp" placeholder="Seu WhatsApp (com DDD)">
+      <div id="capError" style="display:none; color:var(--c3d); font-size:0.85em; margin:-6px 0 12px;"></div>
+      <button class="btn" type="submit" style="width:100%" id="capBtn">Ver meu resultado</button>
+    </form>
+    <p style="text-align:center; font-size:0.75em; color:var(--c5d); margin-top:14px">Seus dados servem só pra te enviar conteúdo da Academia de Lideranças da Nova Terra. Sem spam.</p>
+  </div>
+</div>
+
+<div id="screen-result" class="screen">
+  <div id="resultHost"></div>
+</div>
+
+</div>
+
+<script>
+const questions = [
+{ text: "Quando você sente que precisa evoluir, o que busca primeiro?", opts: [
+  ["Entender melhor a mim mesmo, minha frequência, meus padrões.","SI"],
+  ["Curar ou aprofundar um vínculo específico.","REL"],
+  ["Fortalecer a comunidade ou o time que já lidero.","GRU"],
+  ["Ampliar o impacto do meu trabalho lá fora.","MUN"],
+  ["Sentir que faço parte de algo maior, uma rede, um propósito coletivo.","PLA"]]},
+{ text: "O que mais te dá energia?", opts: [
+  ["Um momento de silêncio e autoconhecimento.","SI"],
+  ["Uma conversa profunda, um a um.","REL"],
+  ["Facilitar um encontro, ver o grupo em sintonia.","GRU"],
+  ["Ver um projeto gerar mudança concreta.","MUN"],
+  ["Sentir-se conectado a outras lideranças espalhadas pelo mundo.","PLA"]]},
+{ text: "Qual frase soa mais verdadeira pra você hoje?", opts: [
+  ["\"Preciso me regular antes de qualquer coisa.\"","SI"],
+  ["\"As pessoas certas ao meu redor mudam tudo.\"","REL"],
+  ["\"Sozinho eu vou rápido, em grupo eu vou longe.\"","GRU"],
+  ["\"Meu trabalho precisa deixar uma marca real.\"","MUN"],
+  ["\"Sinto que sou parte de uma transição maior que eu.\"","PLA"]]},
+{ text: "Onde você sente mais resistência hoje?", opts: [
+  ["Em manter minha própria coerência quando ninguém está olhando.","SI"],
+  ["Em pedir ajuda ou receber sem culpa.","REL"],
+  ["Em delegar e confiar que outros seguram o campo.","GRU"],
+  ["Em cobrar o valor justo pelo meu trabalho.","MUN"],
+  ["Em confiar que não preciso sustentar tudo sozinho.","PLA"]]},
+{ text: "Se você pudesse escolher um único superpoder de liderança, qual seria?", opts: [
+  ["Autodomínio total, mesmo sob pressão.","SI"],
+  ["Ver o potencial verdadeiro de qualquer pessoa.","REL"],
+  ["Unir qualquer grupo em torno de um propósito comum.","GRU"],
+  ["Transformar qualquer ideia em impacto real.","MUN"],
+  ["Sentir e ativar a rede invisível que conecta tudo.","PLA"]]},
+{ text: "O que te deixa mais desconfortável?", opts: [
+  ["Perder o próprio centro.","SI"],
+  ["Vínculos superficiais, sem verdade.","REL"],
+  ["Grupos sem direção, sem coerência.","GRU"],
+  ["Trabalho que não gera mudança real.","MUN"],
+  ["Sentir-se desconectado do propósito maior.","PLA"]]},
+{ text: "Nos próximos 90 dias, o que você mais quer desenvolver?", opts: [
+  ["Minha própria regulação e presença.","SI"],
+  ["Vínculos mais profundos e verdadeiros.","REL"],
+  ["Minha capacidade de facilitar e sustentar grupos.","GRU"],
+  ["Meu impacto e alcance no mundo.","MUN"],
+  ["Minha conexão com a rede de lideranças da Nova Terra.","PLA"]]},
+{ text: "Escolha a cena que mais ressoa com você:", opts: [
+  ["Você sozinho, em silêncio, se reconectando com o próprio centro.","SI"],
+  ["Você numa conversa profunda que muda a vida de alguém.","REL"],
+  ["Você facilitando um círculo que se torna comunidade.","GRU"],
+  ["Você vendo seu projeto ganhar vida e escala.","MUN"],
+  ["Você sentindo-se parte de uma rede global de lideranças despertando.","PLA"]]}
+];
+
+const bandQuestions = [
+{ domain:"SI", text: "Como está sua relação com você mesmo hoje?", opts: [
+  ["Ainda estou sobrevivendo, no piloto automático.","3D"],
+  ["Sinto tudo intensamente, ainda processando muita coisa.","4D"],
+  ["Já regulo meu próprio sistema antes de agir.","5D"],
+  ["Já transformo meus padrões internos em estrutura real.","6D"],
+  ["Presença e ação já são a mesma coisa pra mim.","7D"]]},
+{ domain:"REL", text: "Como estão seus vínculos mais próximos hoje?", opts: [
+  ["Ainda sinto competição ou desconfiança em alguns vínculos.","3D"],
+  ["Ainda me perco entre cuidar de mim e cuidar do outro.","4D"],
+  ["Já vejo o potencial das pessoas antes de qualquer falha.","5D"],
+  ["Já crio redes que sustentam o crescimento de todos.","6D"],
+  ["Já não sinto separação real entre eu e o outro.","7D"]]},
+{ domain:"GRU", text: "Como você lidera ou participa de grupos hoje?", opts: [
+  ["Prefiro estrutura clara e hierarquia, é onde me sinto seguro.","3D"],
+  ["Facilito, mas ainda me esgoto no processo.","4D"],
+  ["Sustento a coerência do grupo pela minha presença.","5D"],
+  ["Já formo outros facilitadores, não dependo de mim sozinho.","6D"],
+  ["Os grupos que sustento já são organismos vivos, autônomos.","7D"]]},
+{ domain:"MUN", text: "Como está o impacto do seu trabalho no mundo hoje?", opts: [
+  ["Ainda é sobrevivência — dou conta do que precisa ser feito.","3D"],
+  ["Estou trocando dano por reparo, aos poucos.","4D"],
+  ["Já gero mudança real e mensurável em quem eu toco.","5D"],
+  ["Já construo estrutura que regenera por design.","6D"],
+  ["Meu trabalho já serve a humanidade como extensão natural de mim.","7D"]]},
+{ domain:"PLA", text: "Como você sente sua conexão com a transição planetária?", opts: [
+  ["Ainda me sinto isolado, sem ver a rede maior.","3D"],
+  ["Já percebo que não estou sozinho nessa travessia.","4D"],
+  ["Já ancoro conscientemente meu código de luz.","5D"],
+  ["Já teço pontes entre territórios e pessoas.","6D"],
+  ["Já sirvo ao planeta sem precisar de crédito por isso.","7D"]]}
+];
+
+
+const domainInfo = {
+SI:{ name:"Si", triad:"autoliderança · maestria · soberania",
+  trap:"A sombra: tanto autoconhecimento pode virar mais um jeito de adiar o mundo lá fora. Autoliderança que nunca sai de você mesmo vira looping, não maestria.",
+  next:"Duas ferramentas, um salto de consciência: o Mapa de Evolução mostra com precisão onde você está e o próximo salto da sua alma. O Guia de Práticas leva da travessia à prática, passo a passo, pra sustentar esse domínio no dia a dia." },
+REL:{ name:"Relações", triad:"validação · cura · empoderamento",
+  trap:"A sombra: virar terapeuta de todo mundo ao seu redor, mesmo sem ser chamado pra isso. Nem todo vínculo pede a sua cura.",
+  next:"Duas ferramentas, um salto de consciência: o Mapa de Evolução mostra com precisão onde você está e o próximo salto da sua alma. O Guia de Práticas leva da travessia à prática, passo a passo, pra sair da cura infinita e assumir a liderança." },
+GRU:{ name:"Grupos", triad:"facilitação · sustentação · expansão",
+  trap:"A sombra: o grupo depender de você existir. Facilitação madura forma outros facilitadores, não mantém todo mundo olhando pra você.",
+  next:"Duas ferramentas, um salto de consciência: o Mapa de Evolução mostra com precisão onde você está e o próximo salto da sua alma. O Guia de Práticas leva da travessia à prática, passo a passo, pra facilitar sem se esgotar." },
+MUN:{ name:"Mundo", triad:"regeneração · impacto · cura coletiva",
+  trap:"A sombra: medir seu valor só pelo tamanho do impacto, e nunca se sentir suficiente. Impacto real também nasce de coisas pequenas.",
+  next:"Duas ferramentas, um salto de consciência: o Mapa de Evolução mostra com precisão onde você está e o próximo salto da sua alma. O Guia de Práticas leva da travessia à prática, passo a passo — incluindo o Mapa do Negócio Consciente, pra desenhar como sua terapia 1:1 pode virar algo maior." },
+PLA:{ name:"Planeta", triad:"grade · transição · serviço",
+  trap:"A sombra: tanto olhar pro todo que esquece de aterrar no aqui e agora. Serviço planetário também precisa de chão, corpo e rotina.",
+  next:"Duas ferramentas, um salto de consciência: o Mapa de Evolução mostra com precisão onde você está e o próximo salto da sua alma. O Guia de Práticas leva da travessia à prática, passo a passo, pra ancorar seu serviço no aqui e agora." }
+};
+
+const bandNames = { "3D":"3D · Densidade", "4D":"4D · O Limiar", "5D":"5D · Coração", "6D":"6D · Luz", "7D":"7D · Som Primordial" };
+
+// A célula exata: matriz[domínio][faixa]
+const matrix = {
+SI:{ "3D":"Executar sem medo — sustentar estrutura e segurança material.",
+     "4D":"Discernir a própria dor da dor alheia — sair da cura infinita.",
+     "5D":"Maestria — regular o próprio sistema antes de qualquer ação.",
+     "6D":"Soberania — traduzir padrão interno em estrutura, sem perder o corpo.",
+     "7D":"Soberania plena — presença e ação como a mesma coisa." },
+REL:{ "3D":"Vínculo como segurança — pertencimento antes de tudo.",
+     "4D":"Validação — reconhecer a própria dor e a do outro sem se fundir a ela.",
+     "5D":"Cura — espelhar o potencial do outro em vez de corrigi-lo.",
+     "6D":"Empoderamento — tecer redes que sustentam o crescimento mútuo.",
+     "7D":"Empoderamento pleno — vínculo sem agenda, serviço puro à relação." },
+GRU:{ "3D":"Grupo como abrigo — hierarquia clara, segurança estrutural.",
+     "4D":"Facilitação — segurar o campo de um grupo sem se esgotar nele.",
+     "5D":"Sustentação — o grupo coerente pela presença, não pelo controle.",
+     "6D":"Expansão — arquitetar estrutura que multiplica facilitadores.",
+     "7D":"Expansão plena — organismo vivo, ninguém é insubstituível." },
+MUN:{ "3D":"Sobrevivência material — atender ao próprio entorno sem extrair além do necessário.",
+     "4D":"Regeneração — trocar dano por reparo nas escolhas cotidianas.",
+     "5D":"Impacto — ação coerente que gera mudança mensurável em quem se toca.",
+     "6D":"Estrutura que regenera por design, sustenta muitos ao mesmo tempo.",
+     "7D":"Cura coletiva — servir a humanidade como extensão natural do próprio ser." },
+PLA:{ "3D":"Enraizamento — parte do campo vivo da Terra, ainda sem ver a rede.",
+     "4D":"Perceber que não está sozinho na travessia, mesmo sem nomear.",
+     "5D":"Nó ativo — ancorar código de luz conscientemente.",
+     "6D":"Transição — tecer pontes entre territórios.",
+     "7D":"Serviço puro — presença que sustenta o planeta, sem crédito." }
+};
+
+let current = 0;
+let currentB = 0;
+let topDomain = null;
+const scores = { SI:0, REL:0, GRU:0, MUN:0, PLA:0 };
+const domainBands = { SI:null, REL:null, GRU:null, MUN:null, PLA:null };
+
+function goTo(id){
+  document.querySelectorAll('.screen').forEach(s=>s.classList.remove('active'));
+  if(id==='q1'){
+    document.getElementById('screen-q').classList.add('active');
+    renderQuestion();
+  }
+}
+
+function renderQuestion(){
+  const q = questions[current];
+  document.getElementById('progressBar').style.width = ((current)/questions.length*100)+'%';
+  const host = document.getElementById('questionHost');
+  host.innerHTML = '<div class="q-label">Parte 1 · Domínio — Pergunta ' + (current+1) + ' de ' + questions.length + '</div>' +
+    '<div class="q-text">' + q.text + '</div>' +
+    q.opts.map((o,i)=>'<button class="opt" onclick="answer(\''+o[1]+'\')">'+o[0]+'</button>').join('');
+}
+
+function answer(domain){
+  scores[domain]++;
+  current++;
+  if(current < questions.length){
+    renderQuestion();
+  } else {
+    let max = -1;
+    for(const k in scores){ if(scores[k] > max){ max = scores[k]; topDomain = k; } }
+    document.querySelectorAll('.screen').forEach(s=>s.classList.remove('active'));
+    document.getElementById('screen-transition').classList.add('active');
+  }
+}
+
+function startPartB(){
+  document.querySelectorAll('.screen').forEach(s=>s.classList.remove('active'));
+  document.getElementById('screen-q').classList.add('active');
+  currentB = 0;
+  renderBandQuestion();
+}
+
+function renderBandQuestion(){
+  const q = bandQuestions[currentB];
+  document.getElementById('progressBar').style.width = (50 + (currentB)/bandQuestions.length*50)+'%';
+  const host = document.getElementById('questionHost');
+  host.innerHTML = '<div class="q-label">Parte 2 · ' + domainInfo[q.domain].name + ' — Pergunta ' + (currentB+1) + ' de ' + bandQuestions.length + '</div>' +
+    '<div class="q-text">' + q.text + '</div>' +
+    q.opts.map((o,i)=>'<button class="opt" onclick="answerBand(\''+o[1]+'\')">'+o[0]+'</button>').join('');
+}
+
+function answerBand(band){
+  const q = bandQuestions[currentB];
+  domainBands[q.domain] = band;
+  currentB++;
+  if(currentB < bandQuestions.length){
+    renderBandQuestion();
+  } else {
+    document.querySelectorAll('.screen').forEach(s=>s.classList.remove('active'));
+    document.getElementById('screen-capture').classList.add('active');
+  }
+}
+
+const WEBHOOK_URL = 'https://hook.us2.make.com/di8nys4yzx72wt7waoepja5ff34gesev';
+
+function submitCapture(event){
+  event.preventDefault();
+
+  const nome = document.getElementById('capNome').value.trim();
+  const email = document.getElementById('capEmail').value.trim();
+  const whatsapp = document.getElementById('capWhatsapp').value.trim();
+  const errBox = document.getElementById('capError');
+
+  if(!nome || !email || !whatsapp){
+    errBox.style.display = 'block';
+    errBox.textContent = 'Preenche os três campos antes de continuar.';
+    return;
+  }
+  errBox.style.display = 'none';
+
+  if(!topDomain){ topDomain = 'SI'; }
+  const topBand = domainBands[topDomain] || '3D';
+
+  showResult(topBand);
+
+  try {
+    const payload = { nome:nome, email:email, whatsapp:whatsapp, perfil: domainInfo[topDomain].name, faixa: topBand, origem: 'quiz-matriz-lideranca' };
+    const body = JSON.stringify(payload);
+    if(navigator.sendBeacon){
+      navigator.sendBeacon(WEBHOOK_URL, new Blob([body], {type:'text/plain'}));
+    } else {
+      fetch(WEBHOOK_URL, { method:'POST', headers:{'Content-Type':'text/plain'}, body:body, keepalive:true })
+        .catch(function(err){ console.error('Webhook falhou (silencioso):', err); });
+    }
+  } catch (err) {
+    console.error('Erro ao montar/enviar o webhook (silencioso):', err);
+  }
+}
+
+function showResult(topBand){
+  topBand = topBand || '3D';
+  if(!domainInfo[topDomain]){ topDomain = 'SI'; }
+  document.getElementById('progressBar').style.width = '100%';
+  const d = domainInfo[topDomain];
+  const cell = matrix[topDomain][topBand];
+  const bands = ["3D","4D","5D","6D","7D"];
+  const domainOrder = ["SI","REL","GRU","MUN","PLA"];
+  const matrixShort = {
+    SI: { "3D":"Executar sem medo", "4D":"Discernir a própria dor", "5D":"Maestria — regular o sistema", "6D":"Soberania — traduzir em estrutura", "7D":"Soberania plena" },
+    REL:{ "3D":"Vínculo como segurança", "4D":"Validação", "5D":"Cura — espelhar o potencial", "6D":"Empoderamento — tecer redes", "7D":"Empoderamento pleno" },
+    GRU:{ "3D":"Grupo como abrigo", "4D":"Facilitação", "5D":"Sustentação pela presença", "6D":"Expansão — multiplicar facilitadores", "7D":"Expansão plena" },
+    MUN:{ "3D":"Sobrevivência material", "4D":"Regeneração", "5D":"Impacto mensurável", "6D":"Estrutura que regenera", "7D":"Cura coletiva" },
+    PLA:{ "3D":"Enraizamento", "4D":"Perceber a rede", "5D":"Nó ativo", "6D":"Transição — tecer pontes", "7D":"Serviço puro" }
+  };
+
+  let tableHtml = '<table class="fullmatrix"><tr><th></th>' + bands.map(b=>'<th>'+b+'</th>').join('') + '</tr>';
+  domainOrder.forEach(function(dom){
+    const rowBand = domainBands[dom] || topBand;
+    tableHtml += '<tr><td class="rowlabel">' + domainInfo[dom].name + '</td>';
+    bands.forEach(function(b){
+      const isPrimary = (dom === topDomain && b === rowBand);
+      const isSecondary = (!isPrimary && b === rowBand);
+      const cls = isPrimary ? 'hit' : (isSecondary ? 'hit-secondary' : '');
+      tableHtml += '<td class="' + cls + '">' + matrixShort[dom][b] + '</td>';
+    });
+    tableHtml += '</tr>';
+  });
+  tableHtml += '</table>';
+
+  document.getElementById('resultHost').innerHTML =
+    '<span class="result-tag">Sua célula na matriz</span>' +
+    '<h1 class="result-name">' + d.name + ' · ' + topBand + '</h1>' +
+    '<p class="result-triad">' + d.triad + ' — ' + bandNames[topBand] + '</p>' +
+    '<div class="card">' +
+    tableHtml +
+    '<p class="matrix-legend">Preenchido = seu domínio principal, na sua faixa nele · contorno dourado = a faixa de cada um dos outros domínios, conforme suas respostas</p>' +
+    '<p style="font-size:1.1em; color:var(--c7d); text-align:center; margin-top:18px">' + cell + '</p>' +
+    '<div class="trap"><h4>A sombra a observar</h4><p>' + d.trap + '</p></div>' +
+    '<div class="cta"><p style="margin-top:0">' + d.next + '</p></div>' +
+    '<div class="cta-row">' +
+    '<a href="https://mapadeevolucao.lovable.app" target="_blank">Fazer o Mapa de Evolução</a>' +
+    '</div>' +
+    '</div>' +
+    '<div class="restart"><a onclick="restart()">Refazer o quiz</a></div>';
+  document.querySelectorAll('.screen').forEach(s=>s.classList.remove('active'));
+  document.getElementById('screen-result').classList.add('active');
+}
+
+function restart(){
+  current = 0; currentB = 0; topDomain = null;
+  for(const k in scores) scores[k] = 0;
+  for(const k in bandScores) bandScores[k] = 0;
+  document.getElementById('captureForm').reset();
+  const btn = document.getElementById('capBtn');
+  btn.textContent = 'Ver meu resultado';
+  btn.disabled = false;
+  document.querySelectorAll('.screen').forEach(s=>s.classList.remove('active'));
+  document.getElementById('screen-intro').classList.add('active');
+}
+</script>
+</body>
+</html>
